@@ -1,0 +1,27 @@
+﻿@using Newtonsoft.Json
+@model IEnumerable<Category>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TreeView</title>
+    <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet" />
+    <link href="~/lib/tree-data/css/sintax.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="container">
+        <div id="tree"></div>
+    </div>
+
+    <script src="~/lib/tree-data/js/treedata.js"></script>
+    <script>
+        var tree = @Html.Raw(JsonConvert.SerializeObject(Model.BuildTree()));
+        TreeData(tree, "#tree");
+    </script>
+</body>
+</html>
