@@ -49,7 +49,7 @@ input {
 #main, #container {
     position: relative;
     margin: 0 auto;
-    width: 820px;
+    /*width: 820px;*/
     margin-top: 50px;
 }
 

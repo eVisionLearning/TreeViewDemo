@@ -20,3 +20,13 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.form-group{
+    margin-top:20px;
+}
+
+[type=color]{
+    width:30px;
+    height:30px;
+    padding:2px;
+}

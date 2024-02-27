@@ -21,8 +21,9 @@
 <body>
     <div id="container">
         <div id="tree"></div>
+        <input type="number" value="100" id="zoom-value" style="position:fixed; right:5px; padding:2px; top:5px; width: 50px;" />
     </div>
-
+    <div style="margin:30px 0;"></div>
     <script src="~/lib/tree-data/js/treedata.js"></script>
     <script>
         var tree = @Html.Raw(JsonConvert.SerializeObject(Model.BuildTree()));

@@ -24,6 +24,47 @@ else
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="TextColor" class="control-label"></label>
+                        <input asp-for="TextColor" class="form-control" value="@(Model?.TextColor ?? "#000000")" type="color" />
+                        <span asp-validation-for="TextColor" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="BgColor" class="control-label"></label>
+                        <input asp-for="BgColor" class="form-control" value="@(Model?.BgColor ?? "#ffffff")" type="color" />
+                        <span asp-validation-for="BgColor" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h3>Attributes</h3>
+            <div class="form-group">
+                <label asp-for="Attribute1" class="control-label"></label>
+                <input asp-for="Attribute1" class="form-control" />
+                <span asp-validation-for="Attribute1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Attribute2" class="control-label"></label>
+                <input asp-for="Attribute2" class="form-control" />
+                <span asp-validation-for="Attribute2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Attribute3" class="control-label"></label>
+                <input asp-for="Attribute3" class="form-control" />
+                <span asp-validation-for="Attribute3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Attribute4" class="control-label"></label>
+                <input asp-for="Attribute4" class="form-control" />
+                <span asp-validation-for="Attribute4" class="text-danger"></span>
+            </div>
+
+
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Status" /> @Html.DisplayNameFor(model => model.Status)

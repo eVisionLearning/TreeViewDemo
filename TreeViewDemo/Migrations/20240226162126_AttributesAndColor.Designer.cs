@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TreeViewDemo.Data;
 
@@ -11,9 +12,11 @@ using TreeViewDemo.Data;
 namespace TreeViewDemo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240226162126_AttributesAndColor")]
+    partial class AttributesAndColor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace TreeViewDemo.Migrations
                     b.Property<string>("Attribute4")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BgColor")
+                    b.Property<string>("ColorCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -53,9 +56,6 @@ namespace TreeViewDemo.Migrations
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
-
-                    b.Property<string>("TextColor")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
