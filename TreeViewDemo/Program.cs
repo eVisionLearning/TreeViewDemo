@@ -22,6 +22,7 @@ try { await context.Database.MigrateAsync(); } catch (Exception) { }
 //    app.UseHsts();
 //}
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

@@ -13,6 +13,11 @@ namespace TreeViewDemo.Controllers
             _logger = logger;
         }
 
+        public IActionResult Demo()
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             return RedirectToAction("Index", "Categories");

@@ -13,21 +13,87 @@
     <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet" />
     <link href="~/lib/tree-data/css/sintax.css" rel="stylesheet" />
     <style>
+        #tree-map {
+            display: flex;
+            height: 100vh;
+            cursor: grab;
+            justify-content: center;
+            align-items: center;
+            width: 500vw;
+            margin-left: -230vw;
+        }
+        #tree-map.dragging {
+            cursor: grabbing;
+        }
+        body {
+            overflow: hidden; /* Prevent page scrolling */
+        }
         .tree > li:nth-child(1) > a:nth-child(1) {
-            display: none;
+            visibility:hidden;
         }
     </style>
 </head>
 <body>
     <div id="container">
-        <div id="tree"></div>
+        <div id="tree-map">
+            <div id="tree"></div>
+        </div>
         <input type="number" value="100" id="zoom-value" style="position:fixed; right:5px; padding:2px; top:5px; width: 50px;" />
     </div>
     <div style="margin:30px 0;"></div>
     <script src="~/lib/tree-data/js/treedata.js"></script>
     <script>
-        var tree = @Html.Raw(JsonConvert.SerializeObject(Model.BuildTree()));
-        TreeData(tree, "#tree");
-    </script>
+    var tree = @Html.Raw(JsonConvert.SerializeObject(Model.BuildTree()));
+    TreeData(tree, "#tree");
+
+    let lastX, lastY;
+    let zoomFactor = 1;
+    let storedZoomFactor;
+
+    let map = document.getElementById('tree-map');
+
+    // Function to handle mouse down event
+    map.addEventListener('mousedown', (event) => {
+        isDragging = true;
+        storedZoomFactor = zoomFactor;
+        lastX = event.clientX;
+        lastY = event.clientY;
+        event.preventDefault(); // Prevent default behavior
+        map.classList.add('dragging');
+    });
+
+    document.addEventListener('mouseup', () => {
+    isDragging = false;
+    map.classList.remove('dragging');
+    });
+
+    // Function to handle mouse move event
+    document.addEventListener('mousemove', (event) => {
+        if (isDragging) {
+            const deltaX = event.clientX - lastX;
+            const deltaY = event.clientY - lastY;
+
+            // Update transform with stored zoom and round transformX value
+            map.style.transform = `scale(${storedZoomFactor}) translate(${Math.round(map.style.transformX || 0)}px, ${map.style.transformY || 0}px)`;
+            map.style.transformX = parseInt(map.style.transformX || 0) + deltaX;
+            map.style.transformY = parseInt(map.style.transformY || 0) + deltaY;
+
+            lastX = event.clientX;
+            lastY = event.clientY;
+        }
+    });
+
+    // Function to handle page scroll event (zooming)
+    map.addEventListener('wheel', (event) => {
+        const deltaY = event.deltaY;
+        const zoomDelta = deltaY > 0 ? 0.01 : -0.01; // Adjust zoom delta based on scroll direction (adjust as needed)
+        zoomFactor += zoomDelta;
+
+        // Restrict zoom factor within a reasonable range
+        zoomFactor = Math.max(0.5, Math.min(4, zoomFactor));
+
+        map.style.transform = `scale(${zoomFactor})`;
+    });
+</script>
 </body>
 </html>
