@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.InteropServices;
 
 namespace TreeViewDemo.Models
 {
@@ -16,7 +17,9 @@ namespace TreeViewDemo.Models
         public string Attribute4 { get; set; }
         public int? ParentId { get; set; }
         public virtual Category Parent { get; set; }
-
+        
+        [NotMapped]
+        public bool Partial { get; set; }
         public List<Category> Childs { get; set; }
     }
 }

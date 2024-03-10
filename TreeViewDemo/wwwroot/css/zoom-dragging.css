@@ -1,0 +1,51 @@
+#tree-map {
+    display: flex;
+    height: 100vh;
+    cursor: grab;
+    justify-content: center;
+    align-items: center;
+    width: 500vw;
+    margin-left: -230vw;
+}
+#tree-map.dragging {
+    cursor: grabbing;
+}
+body {
+    overflow: hidden;
+}
+
+.tree > li:nth-child(0) > a:nth-child(0) {
+    visibility:hidden;
+}
+
+#tree ul:first-child > li:first-child > a:first-child{
+    /*visibility: hidden;*/
+    background: red;
+}
+
+ul.tree{
+    /*width: 5000%;*/
+    margin:auto;
+}
+
+body{
+    width: 50000%;
+}
+
+#tree-map a {
+    margin: 5px;
+}
+
+.form-control[type=color]{
+    width:30px !important;
+    height:30px !important;
+    padding:2px !important;
+}
+
+.opacity0{
+    opacity: 0 !important;
+}
+
+.opacity1{
+    opacity: 1 !important;
+}
