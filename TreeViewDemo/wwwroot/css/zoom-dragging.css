@@ -49,3 +49,7 @@ body{
 .opacity1{
     opacity: 1 !important;
 }
+
+.svg-add-icon, .svg-edit-icon{
+    cursor: pointer !important;
+}

@@ -69,3 +69,9 @@ setTimeout(() => {
 // function clearLocalStorage(){
 //     localStorage.clear();
 // }
+
+$(document).on('dblclick', '.input-display', function (e){
+   console.log(e);
+   $(this).hide();
+   $(this).prev('input').show();
+});

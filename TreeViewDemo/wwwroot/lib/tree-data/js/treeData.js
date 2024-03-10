@@ -15,15 +15,18 @@ function TreeData(data, select) {
 
         $(document).on('click', 'li', function(event) {
             event.stopPropagation(); // Stop propagation to prevent bubbling
-            $('.svg-add-icon, .svg-edit-icon').hide();
-            $('.input-edit').hide();
-            $('.input-display').show();
-            //$(this).hide();
-            // Show child SVGs within the hovered li
-            $(this).children('.svg-add-icon').show();
-            $(this).children('.svg-edit-icon').show();
-            $(this).children('.input-edit').show();
-            $(this).children('.input-display').hide();
+            if($(this).hasClass('active-i')) return;
+                $('.active-i').removeClass('active-i');
+                $('.svg-add-icon, .svg-edit-icon').hide();
+                $('.input-edit').hide();
+                $('.input-display').show();
+                //$(this).hide();
+                // Show child SVGs within the hovered li
+                $(this).children('.svg-add-icon').show();
+                $(this).children('.svg-edit-icon').show();
+                $(this).children('.input-edit').show();
+                $(this).children('.input-display').hide();
+                $(this).addClass('active-i');
         });
     },500);
 }
