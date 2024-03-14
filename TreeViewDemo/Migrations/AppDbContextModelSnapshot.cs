@@ -22,6 +22,59 @@ namespace TreeViewDemo.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TreeViewDemo.Models.AppUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("LoginId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int?>("TreeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TreeId");
+
+                    b.ToTable("AppUsers");
+                });
+
+            modelBuilder.Entity("TreeViewDemo.Models.AppUserLoginHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("EntryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AppUserLoginHistories");
+                });
+
             modelBuilder.Entity("TreeViewDemo.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -64,6 +117,26 @@ namespace TreeViewDemo.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("TreeViewDemo.Models.AppUser", b =>
+                {
+                    b.HasOne("TreeViewDemo.Models.Category", "Tree")
+                        .WithMany()
+                        .HasForeignKey("TreeId");
+
+                    b.Navigation("Tree");
+                });
+
+            modelBuilder.Entity("TreeViewDemo.Models.AppUserLoginHistory", b =>
+                {
+                    b.HasOne("TreeViewDemo.Models.AppUser", "User")
+                        .WithMany("Logins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TreeViewDemo.Models.Category", b =>
                 {
                     b.HasOne("TreeViewDemo.Models.Category", "Parent")
@@ -71,6 +144,11 @@ namespace TreeViewDemo.Migrations
                         .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("TreeViewDemo.Models.AppUser", b =>
+                {
+                    b.Navigation("Logins");
                 });
 
             modelBuilder.Entity("TreeViewDemo.Models.Category", b =>

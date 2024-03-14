@@ -7,8 +7,12 @@ using TreeViewDemo.Models;
 
 namespace TreeViewDemo.Data
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+    public class AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor) : DbContext(options)
     {
-        public DbSet<TreeViewDemo.Models.Category> Categories { get; set; } = default!;
+        public readonly IHttpContextAccessor HttpContextAccessor = httpContextAccessor;
+        public DbSet<Category> Categories { get; init; } = default!;
+        public DbSet<AppUser> AppUsers { get; init; } = default!;
+        public DbSet<AppUserLoginHistory> AppUserLoginHistories { get; set; }
+        
     }
 }

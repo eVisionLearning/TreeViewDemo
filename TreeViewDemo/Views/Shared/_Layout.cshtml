@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using TreeViewDemo.Data
+@inject AppDbContext _context
+@{
+    var loggedInUser = CoreHandler.GetInstance().GetLoggedInUser(_context);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,6 +32,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="TreeView">Tree View</a>
                         </li>
                     </ul>
+                    
+                    <div class="float-end">
+                        @if (loggedInUser != null)
+                        {
+                            @: Welcome <b>@loggedInUser.LoginId</b> | 
+                            @: <a href="/Account/Logout">Logout</a>
+                        }
+                        else
+                        {
+                            @: <a href="/Account/Login">Login</a> |
+                            @: <a href="/Account/Register">Register</a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
