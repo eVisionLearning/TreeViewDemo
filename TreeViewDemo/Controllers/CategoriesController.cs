@@ -21,7 +21,7 @@ namespace TreeViewDemo.Controllers
         {
             if (parentId.HasValue)
             {
-                var parent = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.ParentId == parentId);
+                var parent = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == parentId);
                 if (parent == null) return RedirectToAction("Index");
                 ViewBag.parent = parent;
             }
@@ -62,11 +62,9 @@ namespace TreeViewDemo.Controllers
         {
             if (!parentId.HasValue)
             {
-                if (!_context.Categories.Any(m => m.UserId == _context.GetLoggedInUserId)) return View();
-                
-                var id = await _context.FilteredCategories().Where(m => !m.ParentId.HasValue).Select(m => m.Id).FirstOrDefaultAsync();
-                return RedirectToAction("TreeView", new { id });
+                return View();
             }
+
             var parent = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == parentId);
             ViewBag.parent = parent;
             ViewBag.partial = partial;
@@ -83,6 +81,12 @@ namespace TreeViewDemo.Controllers
             if (!ModelState.IsValid) return View(category);
             category.UserId = _context.GetLoggedInUserId;
             _context.Add(category);
+            if (!string.IsNullOrEmpty(category.TreeName))
+            {
+                var user = await _context.AppUsers.FirstOrDefaultAsync(m => m.Id == _context.GetLoggedInUserId);
+                user.TreeName = category.TreeName;
+            }
+
             await _context.SaveChangesAsync();
             return category.Partial
                 ? RedirectToAction("TreeView")
@@ -187,18 +191,22 @@ namespace TreeViewDemo.Controllers
         }
 
         [AccessAnonymous]
-        public async Task<IActionResult> TreeView(int id, string keyword, string nodeName, string parentName,
+        public async Task<IActionResult> TreeView(int? id, string keyword, string parentName,
             string grandParentName)
         {
+            ViewBag.keyword = keyword;
+            ViewBag.parentName = parentName;
+            ViewBag.grandParentName = grandParentName;
+            
             var categories = await _context.Categories
                 .Include(m => m.Parent)
-                .Include(m => m.Childs)
+                .Include(m => m.Childs).ThenInclude(m => m.Childs).ThenInclude(m => m.Childs)
                 .Include(m => m.User)
                 .ToListAsync();
             
             if (id > 0)
             {
-                var data = categories.Where(m => m.Id == id).ToList();
+                var data = categories.Where(m => m.UserId == id).ToList();
                 if (data.Count == 0) return RedirectToAction("Index");
                 if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
                 return View(data);
@@ -206,19 +214,27 @@ namespace TreeViewDemo.Controllers
             else
             {
                 var query = categories.Where(m => true);
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    query = categories.Where(m => m.User.TreeName == keyword);
+                }
+                else
+                {
+                    id ??= _context.GetLoggedInUserId;
+                }
 
-                query = categories.Where(m => m.User.TreeName == keyword);
+                var data = query.Where(m => !id.HasValue || m.UserId == id).ToList();
                 if (!string.IsNullOrEmpty(parentName))
                 {
-                    query = categories.Where(m => m.Parent?.Name == parentName);
+                    data = data.Any(m => m.Name == parentName && m.ParentId.HasValue) ? data : [];
                 }
 
                 if (!string.IsNullOrEmpty(grandParentName))
                 {
-                    query = categories.Where(m => m.Parent?.Parent?.Name == grandParentName);
+                    var grandParent = data.Where(m => m.Name == parentName && m.ParentId.HasValue).Select(m => m.Parent).FirstOrDefault();
+                    if (grandParent?.Name != grandParentName) data = [];
                 }
-
-                var data = categories.Where(m => m.Id == id).ToList();
+                
                 if (data.Count == 0) return RedirectToAction("Index");
                 if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
                 return View(data);

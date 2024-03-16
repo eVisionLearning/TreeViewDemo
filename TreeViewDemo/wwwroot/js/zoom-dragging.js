@@ -1,11 +1,12 @@
+modelId = modelId || 0;
 let lastX, lastY;
-let zoomFactor = localStorage.getItem('zoomFactor') ? parseFloat(localStorage.getItem('zoomFactor')) : 1;
+let zoomFactor = localStorage.getItem('zoomFactor_' + modelId) ? parseFloat(localStorage.getItem('zoomFactor_' + modelId)) : 1;
 let storedZoomFactor;
 let isDragging = false;
 let map = document.getElementById('tree-map');
 
-map.style.transformX = localStorage.getItem('transformX') ? parseFloat(localStorage.getItem('transformX')) : 0;
-map.style.transformY = localStorage.getItem('transformY') ? parseFloat(localStorage.getItem('transformY')) : 0;
+map.style.transformX = localStorage.getItem('transformX_' + modelId) ? parseFloat(localStorage.getItem('transformX_' + modelId)) : 350;
+map.style.transformY = localStorage.getItem('transformY_' + modelId) ? parseFloat(localStorage.getItem('transformY_' + modelId)) : 60;
 
 // Apply the saved transform on load
 map.style.transform = `scale(${zoomFactor}) translate(${map.style.transformX}px, ${map.style.transformY}px)`;
@@ -58,9 +59,9 @@ map.addEventListener('wheel', (event) => {
 
 // Save the state when the user leaves the page
 window.addEventListener('beforeunload', () => {
-    localStorage.setItem('zoomFactor', zoomFactor);
-    localStorage.setItem('transformX', map.style.transformX);
-    localStorage.setItem('transformY', map.style.transformY);
+    localStorage.setItem('zoomFactor_' + modelId, zoomFactor);
+    localStorage.setItem('transformX_' + modelId, map.style.transformX);
+    localStorage.setItem('transformY_' + modelId, map.style.transformY);
 });
 
 setTimeout(() => {

@@ -53,3 +53,20 @@ body{
 .svg-add-icon, .svg-edit-icon{
     cursor: pointer !important;
 }
+
+body{
+    padding:15px !important;
+}
+
+#map-search-area {
+    z-index: 999;
+    position: fixed;
+    right: 10px;
+    top: 10px;
+}
+
+#map-search-area .search-form{
+    float: right;
+    white-space: nowrap;
+    width: 60vw;
+}

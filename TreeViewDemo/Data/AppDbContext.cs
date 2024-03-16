@@ -21,12 +21,12 @@ namespace TreeViewDemo.Data
             {
                 if (LoggedInUser != null) return LoggedInUser;
                 var cookie = HttpContextAccessor?.HttpContext?.Request.Cookies[Globals.AuthenticationCookieName];
-                var user = AppUserLoginHistories.Where(m => m.Token == cookie).Select(m => m.User).FirstOrDefault();
+                LoggedInUser = AppUserLoginHistories.Where(m => m.Token == cookie).Select(m => m.User).FirstOrDefault();
 
-                return user;
+                return LoggedInUser;
             }
         }
 
-        public int? GetLoggedInUserId => LoggedInUser?.Id;
+        public int GetLoggedInUserId => GetLoggedInUser?.Id ?? 0;
     }
 }

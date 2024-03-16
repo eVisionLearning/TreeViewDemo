@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using TreeViewDemo;
 using TreeViewDemo.Data;
+using TreeViewDemo.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.")));
@@ -13,7 +16,24 @@ var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-try { await context.Database.MigrateAsync(); } catch (Exception) { }
+try
+{
+    if (!context.AppUsers.Any())
+    {
+        var user = new AppUser
+        {
+            LoginId = "admin",
+            Password = "admin",
+            TreeName = "Default Tree"
+        };
+        context.AppUsers.Add(user);
+        await context.SaveChangesAsync();
+        user.Password = CoreHandler.GetInstance().Encrypt(user.Password + user.Id);
+        await context.SaveChangesAsync();
+    }
+    var r = context.Database.ExecuteSqlRaw("UPDATE Categories SET UserId = (SELECT TOP 1 Id from AppUsers) WHERE UserId is null");
+    await context.Database.MigrateAsync();
+} catch (Exception) { }
 
 // Configure the HTTP request pipeline.
 //if (!app.Environment.IsDevelopment())

@@ -22,7 +22,7 @@ namespace TreeViewDemo.Models
         public bool Partial { get; set; }
         public List<Category> Childs { get; set; }
 
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public virtual AppUser User { get; set; }
 
         [NotMapped]

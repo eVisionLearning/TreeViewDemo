@@ -15,10 +15,10 @@
 <head>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <meta name="viewport" content="width=device-width"/>
-    <title>TreeView</title>
+    <title>Tree View</title>
     <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet"/>
     <link href="~/lib/tree-data/css/sintax.css" rel="stylesheet"/>
-    <link href="~/css/zoom-dragging.css" asp-append-version="true" />
+    <link href="~/css/zoom-dragging.css" rel="stylesheet" asp-append-version="true"/>
     <style>
         .hidden{
             display: none;
@@ -56,18 +56,26 @@
 </div>
 
 <div id="container">
-    <div class="row">
+    <div class="row" id="map-search-area">
         <div class="col-md-12">
-            <form asp-controller="Categories" asp-action="TreeView">
-                <input type="search" name="keyword" placeholder="Search via Tree Name" required="required"/>
-                <input type="search" name="nodeName" placeholder="Search via Node Name"/>
-                <input type="search" name="parentName" placeholder="Search via Node Parent Name"/>
-                <input type="search" name="grandParentName" placeholder="Search via Node Grand Parent Name"/>
-                <button type="submit" class="btn btn-info btn-sm">
-                    <span class="fa fa-glass"></span>
-                    Search
-                </button>
-            </form>
+            <div class="search-form">
+                <form asp-controller="Categories" asp-action="TreeView">
+                    <input type="search" class="form-control float-start m-1 w-25" name="keyword" placeholder="Search via Tree Name" required="required" list="tree-list" value="@ViewBag.keyword" />
+                    <input type="search" class="form-control float-start m-1 w-25" name="parentName" placeholder="Search via Parent" value="@ViewBag.parentName" />
+                    <input type="search" class="form-control float-start m-1 w-25" name="grandParentName" placeholder="Search via Grand Parent" value="@ViewBag.grandParentName"/>
+                    <button type="submit" class="btn btn-primary btn-sm m-1 py-2 px-3 text-white">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        Search
+                    </button>
+                    
+                    <datalist id="tree-list">
+                        @foreach (var item in _db.Categories.Select(m => m.User.TreeName).Distinct().ToList())
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </datalist>
+                </form>
+            </div>
         </div>
     </div>
     <div id="tree-map">
@@ -83,7 +91,8 @@
 <script src="~/lib/tree-data/js/treedata.js" asp-append-version="true"></script>
 <script>
     var tree = @Html.Raw(JsonConvert.SerializeObject(Model.BuildTree()));
-    var editMode = @Html.Raw(editMode);
+    var editMode = @Html.Raw(Json.Serialize(editMode));
+    var modelId = @Html.Raw(Json.Serialize(Model.Select(m => m.Id).FirstOrDefault()))
     TreeData(tree, "#tree");
 </script>
 <script src="/js/zoom-dragging.js" asp-append-version="true"></script>

@@ -3,7 +3,7 @@ using TreeViewDemo.Models;
 
 namespace TreeViewDemo
 {
-    public static class ExtensionHadler
+    public static class ExtensionHandler
     {
         public static IQueryable<Category> FilteredCategories(this AppDbContext context)
         {
