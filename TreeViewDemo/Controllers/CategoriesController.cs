@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TreeViewDemo.Data;
+using TreeViewDemo.Filters;
 using TreeViewDemo.Models;
 
 namespace TreeViewDemo.Controllers
 {
+    [Authorized]
     public class CategoriesController(AppDbContext context) : Controller
     {
         private readonly AppDbContext _context = context;
@@ -19,12 +21,15 @@ namespace TreeViewDemo.Controllers
         {
             if (parentId.HasValue)
             {
-                var parent = _context.Categories.Find(parentId);
+                var parent = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.ParentId == parentId);
+                if (parent == null) return RedirectToAction("Index");
                 ViewBag.parent = parent;
             }
 
-            return View(await _context.Categories.Where(m => m.ParentId == parentId).Include(m => m.Parent)
-                .Include(m => m.Childs).ToListAsync());
+            var data = await _context.FilteredCategories().Where(m => m.ParentId == parentId)
+                .Include(m => m.Parent)
+                .Include(m => m.Childs).ToListAsync();
+            return View(data);
         }
 
         // GET: Categories/Details/5
@@ -35,9 +40,12 @@ namespace TreeViewDemo.Controllers
                 return NotFound();
             }
 
-            var categories = await _context.Categories.Include(m => m.Parent).Include(m => m.Childs).ToListAsync();
+            var categories = await _context.FilteredCategories()
+                .Include(m => m.Parent)
+                .Include(m => m.Childs)
+                .ToListAsync();
 
-            var category = await _context.Categories
+            var category = await _context.FilteredCategories()
                 .Include(m => m.Parent)
                 .Include(m => m.Childs)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -52,8 +60,14 @@ namespace TreeViewDemo.Controllers
         // GET: Categories/Create
         public async Task<IActionResult> Create(int? parentId, bool partial = false)
         {
-            if (!parentId.HasValue) return View();
-            var parent = await _context.Categories.FindAsync(parentId);
+            if (!parentId.HasValue)
+            {
+                if (!_context.Categories.Any(m => m.UserId == _context.GetLoggedInUserId)) return View();
+                
+                var id = await _context.FilteredCategories().Where(m => !m.ParentId.HasValue).Select(m => m.Id).FirstOrDefaultAsync();
+                return RedirectToAction("TreeView", new { id });
+            }
+            var parent = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == parentId);
             ViewBag.parent = parent;
             ViewBag.partial = partial;
             return View();
@@ -67,9 +81,12 @@ namespace TreeViewDemo.Controllers
         public async Task<IActionResult> Create(Category category)
         {
             if (!ModelState.IsValid) return View(category);
+            category.UserId = _context.GetLoggedInUserId;
             _context.Add(category);
             await _context.SaveChangesAsync();
-            return category.Partial ? RedirectToAction("TreeView") : RedirectToAction(nameof(Index), new { category.ParentId });
+            return category.Partial
+                ? RedirectToAction("TreeView")
+                : RedirectToAction(nameof(Index), new { category.ParentId });
         }
 
         // GET: Categories/Edit/5
@@ -80,12 +97,12 @@ namespace TreeViewDemo.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
                 return NotFound();
             }
-            
+
             category.BgColor ??= "#ffffff";
             category.TextColor ??= "#000000";
 
@@ -110,8 +127,10 @@ namespace TreeViewDemo.Controllers
             {
                 try
                 {
+                    if (!_context.FilteredCategories().Any(m => m.Id == category.Id)) return NotFound();
                     _context.Update(category);
                     _context.Entry(category).Property(m => m.ParentId).IsModified = false;
+                    _context.Entry(category).Property(m => m.UserId).IsModified = false;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -142,7 +161,7 @@ namespace TreeViewDemo.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var category = await _context.FilteredCategories()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
@@ -157,7 +176,7 @@ namespace TreeViewDemo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == id);
             if (category != null)
             {
                 _context.Categories.Remove(category);
@@ -167,10 +186,43 @@ namespace TreeViewDemo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> TreeView()
+        [AccessAnonymous]
+        public async Task<IActionResult> TreeView(int id, string keyword, string nodeName, string parentName,
+            string grandParentName)
         {
-            var categories = await _context.Categories.ToListAsync();
-            return View(categories);
+            var categories = await _context.Categories
+                .Include(m => m.Parent)
+                .Include(m => m.Childs)
+                .Include(m => m.User)
+                .ToListAsync();
+            
+            if (id > 0)
+            {
+                var data = categories.Where(m => m.Id == id).ToList();
+                if (data.Count == 0) return RedirectToAction("Index");
+                if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
+                return View(data);
+            }
+            else
+            {
+                var query = categories.Where(m => true);
+
+                query = categories.Where(m => m.User.TreeName == keyword);
+                if (!string.IsNullOrEmpty(parentName))
+                {
+                    query = categories.Where(m => m.Parent?.Name == parentName);
+                }
+
+                if (!string.IsNullOrEmpty(grandParentName))
+                {
+                    query = categories.Where(m => m.Parent?.Parent?.Name == grandParentName);
+                }
+
+                var data = categories.Where(m => m.Id == id).ToList();
+                if (data.Count == 0) return RedirectToAction("Index");
+                if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
+                return View(data);
+            }
         }
 
         private bool CategoryExists(int id)

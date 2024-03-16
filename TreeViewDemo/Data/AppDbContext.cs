@@ -10,9 +10,23 @@ namespace TreeViewDemo.Data
     public class AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor) : DbContext(options)
     {
         public readonly IHttpContextAccessor HttpContextAccessor = httpContextAccessor;
-        public DbSet<Category> Categories { get; init; } = default!;
-        public DbSet<AppUser> AppUsers { get; init; } = default!;
-        public DbSet<AppUserLoginHistory> AppUserLoginHistories { get; set; }
-        
+        private AppUser LoggedInUser { get; set; }
+        public DbSet<Category> Categories { get; init; }
+        public DbSet<AppUser> AppUsers { get; init; }
+        public DbSet<AppUserLoginHistory> AppUserLoginHistories { get; init; }
+
+        public AppUser GetLoggedInUser
+        {
+            get
+            {
+                if (LoggedInUser != null) return LoggedInUser;
+                var cookie = HttpContextAccessor?.HttpContext?.Request.Cookies[Globals.AuthenticationCookieName];
+                var user = AppUserLoginHistories.Where(m => m.Token == cookie).Select(m => m.User).FirstOrDefault();
+
+                return user;
+            }
+        }
+
+        public int? GetLoggedInUserId => LoggedInUser?.Id;
     }
 }

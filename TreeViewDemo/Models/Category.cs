@@ -21,5 +21,11 @@ namespace TreeViewDemo.Models
         [NotMapped]
         public bool Partial { get; set; }
         public List<Category> Childs { get; set; }
+
+        public int? UserId { get; set; }
+        public virtual AppUser User { get; set; }
+
+        [NotMapped]
+        public string TreeName { get; set; }
     }
 }

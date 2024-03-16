@@ -1,9 +1,14 @@
-﻿using TreeViewDemo.Models;
+﻿using TreeViewDemo.Data;
+using TreeViewDemo.Models;
 
 namespace TreeViewDemo
 {
     public static class ExtensionHadler
     {
+        public static IQueryable<Category> FilteredCategories(this AppDbContext context)
+        {
+            return context.Categories.Where(m => m.UserId == context.GetLoggedInUserId);
+        }
         public static Dictionary<string, object> BuildTree(this IEnumerable<Category> categories)
         {
             var tree = new Dictionary<string, object>

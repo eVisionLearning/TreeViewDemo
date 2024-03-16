@@ -13,9 +13,10 @@ function TreeData(data, select) {
         $('.input-edit').removeClass('hidden').hide();
         $('.svg-add-icon, .svg-edit-icon').hide();
 
-        $(document).on('click', 'li', function(event) {
-            event.stopPropagation(); // Stop propagation to prevent bubbling
-            if($(this).hasClass('active-i')) return;
+        if(editMode){
+            $(document).on('click', 'li', function(event) {
+                event.stopPropagation(); // Stop propagation to prevent bubbling
+                if($(this).hasClass('active-i')) return;
                 $('.active-i').removeClass('active-i');
                 $('.svg-add-icon, .svg-edit-icon').hide();
                 $('.input-edit').hide();
@@ -27,7 +28,8 @@ function TreeData(data, select) {
                 $(this).children('.input-edit').show();
                 $(this).children('.input-display').hide();
                 $(this).addClass('active-i');
-        });
+            });
+        }
     },500);
 }
 
@@ -35,7 +37,8 @@ function buildTree(obj, node) {
     var v = obj[node];
     var treeString = '';
     if (v.attrs) {
-        treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
+        if(editMode){
+            treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
                         <span class="svg-add-icon hidden" onclick="window.location.assign('/Categories/Create?ParentId=${v.id}&partial=true')">
                             <i class="fa-solid fa-plus"></i>
                         </span>
@@ -46,15 +49,16 @@ function buildTree(obj, node) {
                             <span class="svg-edit-icon" onclick="showEditModal(this)">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </span>`;
-    } 
-    // else if(v.isRoot){
-    //     treeString = `<li>
-    //                     <a class="tree-root-item"> 
-    //                         <span>Root</span>
-    //                     </a>;`
-    // }
+        }else{
+            treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
+                        <a style="color:${v.color || 'black'}; background-color:${v.bgColor}" data-bs-toggle="tooltip" title="${v.attrs[0]}&#10;${v.attrs[1]}&#10;${v.attrs[2]}&#10;${v.attrs[3]}&#10;"> 
+                            <span class="input-display">${obj[node].value}</span>
+                        </a>`;   
+        }
+    }
     else {
-        treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
+        if(editMode){
+            treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
                         <span class="svg-add-icon">
                             <i class="fa-solid fa-plus"></i>
                         </span>
@@ -65,6 +69,12 @@ function buildTree(obj, node) {
                         <span class="svg-edit-icon" onclick="showEditModal(this)">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </span>`;
+        }else{
+            treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
+                        <a style="color:${v.color || 'black'}; background-color:${v.bgColor}"> 
+                            <span class="input-display">${obj[node].value}</span>
+                        </a>`;
+        }
     }
     var sons = [];
     for (var i in obj) {
@@ -89,6 +99,7 @@ setTimeout(() => {
 }, 1000);
 
 function showEditModal($this){
+    if(!editMode) return;
     let id = $($this).closest('li').data('id');
     let pid = $($this).closest('li').data('pid');
     let url = "/Categories/Edit/" + id + '?p=true';

@@ -27,7 +27,7 @@ namespace TreeViewDemo.Filters
             IsAuthenticated = user != null;
 
             if (IsAuthenticated) return;
-            context.Result = new RedirectResult("~/Login");
+            context.Result = new RedirectResult("~/Account/Login");
         }
     }
 

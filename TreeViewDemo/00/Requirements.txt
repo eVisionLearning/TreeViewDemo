@@ -13,3 +13,8 @@ Completed and Delivered
 7. We might add two more search boxes where users can look for a parent or a grandparent. But these are optional.
 8. User can view a specific tree part with these optional search boxes, rather than seeing the whole tree.
 9. Suggestion based tree name first search box.
+
+@Date: 15 Mar 2024 10:00 PM
+1. Show a picture with each node, on hovering, it should transform to large size
+2. when user create a node, parent, grand parent and these matches with other (any level) then we want to display those tree with this user
+3. Give button of append (only with one) after appending, 

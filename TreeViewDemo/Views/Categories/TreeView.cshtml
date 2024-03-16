@@ -1,7 +1,12 @@
 ﻿@using Newtonsoft.Json
+@using TreeViewDemo.Data
+@using Microsoft.EntityFrameworkCore
+@inject AppDbContext _db
 @model IEnumerable<Category>
 @{
     Layout = null;
+    bool editMode = ViewBag.editMode ?? false;
+    var treeNames = await _db.AppUsers.Select(m => m.TreeName).Where(m => !string.IsNullOrEmpty(m)).Distinct().ToListAsync();
 }
 
 <!DOCTYPE html>
@@ -51,6 +56,20 @@
 </div>
 
 <div id="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-controller="Categories" asp-action="TreeView">
+                <input type="search" name="keyword" placeholder="Search via Tree Name" required="required"/>
+                <input type="search" name="nodeName" placeholder="Search via Node Name"/>
+                <input type="search" name="parentName" placeholder="Search via Node Parent Name"/>
+                <input type="search" name="grandParentName" placeholder="Search via Node Grand Parent Name"/>
+                <button type="submit" class="btn btn-info btn-sm">
+                    <span class="fa fa-glass"></span>
+                    Search
+                </button>
+            </form>
+        </div>
+    </div>
     <div id="tree-map">
         <div id="tree"></div>
     </div>
@@ -64,6 +83,7 @@
 <script src="~/lib/tree-data/js/treedata.js" asp-append-version="true"></script>
 <script>
     var tree = @Html.Raw(JsonConvert.SerializeObject(Model.BuildTree()));
+    var editMode = @Html.Raw(editMode);
     TreeData(tree, "#tree");
 </script>
 <script src="/js/zoom-dragging.js" asp-append-version="true"></script>

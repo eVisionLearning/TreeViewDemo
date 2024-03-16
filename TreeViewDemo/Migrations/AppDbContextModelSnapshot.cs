@@ -40,12 +40,11 @@ namespace TreeViewDemo.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("TreeId")
-                        .HasColumnType("int");
+                    b.Property<string>("TreeName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TreeId");
 
                     b.ToTable("AppUsers");
                 });
@@ -110,20 +109,16 @@ namespace TreeViewDemo.Migrations
                     b.Property<string>("TextColor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("TreeViewDemo.Models.AppUser", b =>
-                {
-                    b.HasOne("TreeViewDemo.Models.Category", "Tree")
-                        .WithMany()
-                        .HasForeignKey("TreeId");
-
-                    b.Navigation("Tree");
                 });
 
             modelBuilder.Entity("TreeViewDemo.Models.AppUserLoginHistory", b =>
@@ -143,7 +138,13 @@ namespace TreeViewDemo.Migrations
                         .WithMany("Childs")
                         .HasForeignKey("ParentId");
 
+                    b.HasOne("TreeViewDemo.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Parent");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TreeViewDemo.Models.AppUser", b =>

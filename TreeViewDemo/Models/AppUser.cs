@@ -20,8 +20,11 @@ public class AppUser
 
     public List<AppUserLoginHistory> Logins { get; set; }
 
-    public int? TreeId { get; set; }
-    public Category Tree { get; set; }
+    // public int? TreeId { get; set; }
+    // public Category Tree { get; set; }
+    
+    [StringLength(100, ErrorMessage = "Maximum 100 characters allowed")]
+    public string TreeName { get; set; }
 }
 
 public class AppUserViewModel : AppUser
