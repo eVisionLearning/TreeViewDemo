@@ -9,6 +9,27 @@ namespace TreeViewDemo
         {
             return context.Categories.Where(m => m.UserId == context.GetLoggedInUserId);
         }
+
+        public static List<Category> LoadChildsRecursively(this AppDbContext db, Category category)
+        {
+            var allChilds = new List<Category>();
+            LoadChilds(category, db, ref allChilds);
+            return allChilds;
+        }
+        
+        private static void LoadChilds(Category category, AppDbContext db, ref List<Category> allChilds)
+        {
+            allChilds.Add(category);
+            db.Entry(category).Collection(c => c.Childs).Load();
+            if (category.Childs != null && category.Childs.Any())
+            {
+                foreach (var child in category.Childs)
+                {
+                    LoadChilds(child, db, ref allChilds);
+                }
+            }
+        }
+
         public static Dictionary<string, object> BuildTree(this IEnumerable<Category> categories)
         {
             var tree = new Dictionary<string, object>
@@ -33,7 +54,11 @@ namespace TreeViewDemo
                     { "parentId", category.ParentId },
                     { "color", category.TextColor },
                     { "bgColor", category.BgColor },
-                    { "attrs" , new string[] { category.Attribute1,  category.Attribute2, category.Attribute3, category.Attribute4 } }
+                    {
+                        "attrs",
+                        new string[]
+                            { category.Attribute1, category.Attribute2, category.Attribute3, category.Attribute4 }
+                    }
                 };
 
                 tree.Add($"_{category.Id}", node);
@@ -41,6 +66,5 @@ namespace TreeViewDemo
 
             return tree;
         }
-
     }
 }

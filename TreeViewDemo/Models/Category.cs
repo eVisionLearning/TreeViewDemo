@@ -27,5 +27,11 @@ namespace TreeViewDemo.Models
 
         [NotMapped]
         public string TreeName { get; set; }
+        
+        [NotMapped]
+        public string ParentName { get; set; }
+        
+        [NotMapped]
+        public string GrandParentName { get; set; }
     }
 }

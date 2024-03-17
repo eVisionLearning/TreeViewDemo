@@ -26,6 +26,18 @@ else
                     <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name"/>
                     <span asp-validation-for="TreeName" class="text-danger"></span>
                 </div>
+                
+                <div class="form-group">
+                    <label asp-for="ParentName" class="control-label">Parent Name</label>
+                    <input asp-for="ParentName" class="form-control" data-val="true" data-val-required="Enter Tree Parent Name" placeholder="Tree Parent Name"/>
+                    <span asp-validation-for="ParentName" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="GrandParentName" class="control-label">Grand Parent Name</label>
+                    <input asp-for="GrandParentName" class="form-control" data-val="true" data-val-required="Enter Tree Grand Parent Name" placeholder="Tree Grand Parent Name"/>
+                    <span asp-validation-for="GrandParentName" class="text-danger"></span>
+                </div>
             }
             @if (ViewBag.partial == true)
             {

@@ -80,7 +80,25 @@ namespace TreeViewDemo.Controllers
         {
             if (!ModelState.IsValid) return View(category);
             category.UserId = _context.GetLoggedInUserId;
-            _context.Add(category);
+            var obj = new Category
+            {
+                Name = category.GrandParentName,
+                UserId = category.UserId,
+                Childs = new()
+                {
+                    new Category()
+                    {
+                        Name = category.ParentName,
+                        Childs = new()
+                        {
+                            category
+                        },
+                        UserId = category.UserId,
+                    }
+                }
+            };
+            
+            _context.Add(obj);
             if (!string.IsNullOrEmpty(category.TreeName))
             {
                 var user = await _context.AppUsers.FirstOrDefaultAsync(m => m.Id == _context.GetLoggedInUserId);
@@ -197,6 +215,9 @@ namespace TreeViewDemo.Controllers
             ViewBag.keyword = keyword;
             ViewBag.parentName = parentName;
             ViewBag.grandParentName = grandParentName;
+            keyword = keyword?.ToLower();
+            parentName = parentName?.ToLower();
+            grandParentName = grandParentName?.ToLower();
             
             var categories = await _context.Categories
                 .Include(m => m.Parent)
@@ -216,7 +237,7 @@ namespace TreeViewDemo.Controllers
                 var query = categories.Where(m => true);
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    query = categories.Where(m => m.User.TreeName == keyword);
+                    query = categories.Where(m => m.User.TreeName?.ToLower() == keyword);
                 }
                 else
                 {
@@ -226,13 +247,28 @@ namespace TreeViewDemo.Controllers
                 var data = query.Where(m => !id.HasValue || m.UserId == id).ToList();
                 if (!string.IsNullOrEmpty(parentName))
                 {
-                    data = data.Any(m => m.Name == parentName && m.ParentId.HasValue) ? data : [];
+                    var parent = data.FirstOrDefault(m => m.Name?.ToLower() == parentName && m.ParentId.HasValue);
+                    if (parent != null && string.IsNullOrEmpty(grandParentName))
+                    {
+                        data = _context.LoadChildsRecursively(parent);
+                        parent.ParentId = null;
+                    }
+                    else if(string.IsNullOrEmpty(grandParentName))
+                    {
+                        data = [];
+                    }
+                    //data = data.Any(m => m.Name == parentName && m.ParentId.HasValue) ? data : [];
                 }
 
                 if (!string.IsNullOrEmpty(grandParentName))
                 {
-                    var grandParent = data.Where(m => m.Name == parentName && m.ParentId.HasValue).Select(m => m.Parent).FirstOrDefault();
-                    if (grandParent?.Name != grandParentName) data = [];
+                    var grandParent = data.Where(m => m.Name?.ToLower() == parentName && m.ParentId.HasValue).Select(m => m.Parent).FirstOrDefault();
+                    if (grandParent != null && grandParent?.Name?.ToLower() == grandParentName)
+                    {
+                        data = _context.LoadChildsRecursively(grandParent);
+                        grandParent.ParentId = null;
+                    }
+                    else data = [];
                 }
                 
                 if (data.Count == 0) return RedirectToAction("Index");

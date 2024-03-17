@@ -23,7 +23,7 @@ try
         var user = new AppUser
         {
             LoginId = "admin",
-            Password = "admin",
+            Password = "123456",
             TreeName = "Default Tree"
         };
         context.AppUsers.Add(user);

@@ -1,10 +1,10 @@
 1. Color for each node
-2. Clickable node to add childs
+2. Clickable node to add children
 3. 4 Attributes for each node
 Completed and Delivered
 
 @Dated: 14 Mar 2024 01:53 AM
-1. Anybody can sign up using just a unique Login ID and Password.
+1. Simple way to register and login via Login ID and password
 2. We'll make a separate table to keep Tree Names and their IDs. Tree Names don't have to be unique at this level.
 3. Each user can create a tree and change it whenever they want.
 4. Every tree needs to have at least one node, a parent, and then another parent above that.

@@ -17,8 +17,8 @@
     <meta name="viewport" content="width=device-width"/>
     <title>Tree View</title>
     <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet"/>
-    <link href="~/lib/tree-data/css/sintax.css" rel="stylesheet"/>
-    <link href="~/css/zoom-dragging.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/lib/tree-data/css/sintax.css?v=@Globals.StaticAssetsVersion" rel="stylesheet"/>
+    <link href="~/css/zoom-dragging.css?v=@Globals.StaticAssetsVersion" rel="stylesheet" />
     <style>
         .hidden{
             display: none;
@@ -56,18 +56,33 @@
 </div>
 
 <div id="container">
+    <div class="row" style="position: fixed; top: 60px; right: 24px; z-index: 9999;">
+        <div class="col-md-12">
+            @(await Html.PartialAsync("_LoginArea"))
+        </div>
+    </div>
     <div class="row" id="map-search-area">
         <div class="col-md-12">
             <div class="search-form">
                 <form asp-controller="Categories" asp-action="TreeView">
-                    <input type="search" class="form-control float-start m-1 w-25" name="keyword" placeholder="Search via Tree Name" required="required" list="tree-list" value="@ViewBag.keyword" />
-                    <input type="search" class="form-control float-start m-1 w-25" name="parentName" placeholder="Search via Parent" value="@ViewBag.parentName" />
+                    <input type="search" class="form-control float-start m-1 w-25" name="keyword" placeholder="Search via Tree Name" required="required" list="tree-list" value="@ViewBag.keyword"/>
+                    <input type="search" class="form-control float-start m-1 w-25" name="parentName" placeholder="Search via Parent" value="@ViewBag.parentName"/>
                     <input type="search" class="form-control float-start m-1 w-25" name="grandParentName" placeholder="Search via Grand Parent" value="@ViewBag.grandParentName"/>
                     <button type="submit" class="btn btn-primary btn-sm m-1 py-2 px-3 text-white">
                         <i class="fa fa-search" aria-hidden="true"></i>
                         Search
                     </button>
-                    
+
+                    <a class="btn btn-primary btn-sm m-1 py-2 px-3 text-white" href="/Categories/TreeView">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                        Refresh
+                    </a>
+
+                    <a class="btn btn-primary btn-sm m-1 py-2 px-3 text-white" href="/Categories">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        Home
+                    </a>
+
                     <datalist id="tree-list">
                         @foreach (var item in _db.Categories.Select(m => m.User.TreeName).Distinct().ToList())
                         {
@@ -95,8 +110,8 @@
     var modelId = @Html.Raw(Json.Serialize(Model.Select(m => m.Id).FirstOrDefault()))
     TreeData(tree, "#tree");
 </script>
-<script src="/js/zoom-dragging.js" asp-append-version="true"></script>
-<script src="/js/scroll-to-mid.js" asp-append-version="true"></script>
+<script src="/js/zoom-dragging.js?v=@Globals.StaticAssetsVersion"></script>
+<script src="/js/scroll-to-mid.js?v=@Globals.StaticAssetsVersion"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 </html>
