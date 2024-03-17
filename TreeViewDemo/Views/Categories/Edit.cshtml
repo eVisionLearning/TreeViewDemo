@@ -7,66 +7,75 @@
 @if (Model.Partial)
 {
     <form asp-action="Edit">
-        <input asp-for="ParentId" type="hidden" />
+        <input asp-for="ParentId" type="hidden"/>
         <input asp-for="Partial" type="hidden"/>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id"/>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label asp-for="TextColor" class="control-label"></label>
-                        <input asp-for="TextColor" class="form-control" type="color" />
-                        <span asp-validation-for="TextColor" class="text-danger"></span>
-                    </div>
+        @if (!Model.ParentId.HasValue)
+        {
+            <div class="form-group">
+                <label asp-for="TreeName" class="control-label">Tree Name</label>
+                <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name"/>
+                <span asp-validation-for="TreeName" class="text-danger"></span>
+            </div>
+        }
+
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="TextColor" class="control-label"></label>
+                    <input asp-for="TextColor" class="form-control" type="color"/>
+                    <span asp-validation-for="TextColor" class="text-danger"></span>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label asp-for="BgColor" class="control-label"></label>
-                        <input asp-for="BgColor" class="form-control" type="color" />
-                        <span asp-validation-for="BgColor" class="text-danger"></span>
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="BgColor" class="control-label"></label>
+                    <input asp-for="BgColor" class="form-control" type="color"/>
+                    <span asp-validation-for="BgColor" class="text-danger"></span>
                 </div>
             </div>
+        </div>
 
-            <hr />
-            <h3>Attributes</h3>
-            <div class="form-group">
-                <label asp-for="Attribute1" class="control-label"></label>
-                <input asp-for="Attribute1" class="form-control" />
-                <span asp-validation-for="Attribute1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attribute2" class="control-label"></label>
-                <input asp-for="Attribute2" class="form-control" />
-                <span asp-validation-for="Attribute2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attribute3" class="control-label"></label>
-                <input asp-for="Attribute3" class="form-control" />
-                <span asp-validation-for="Attribute3" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attribute4" class="control-label"></label>
-                <input asp-for="Attribute4" class="form-control" />
-                <span asp-validation-for="Attribute4" class="text-danger"></span>
-            </div>
+        <hr/>
+        <h3>Attributes</h3>
+        <div class="form-group">
+            <label asp-for="Attribute1" class="control-label"></label>
+            <input asp-for="Attribute1" class="form-control"/>
+            <span asp-validation-for="Attribute1" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Attribute2" class="control-label"></label>
+            <input asp-for="Attribute2" class="form-control"/>
+            <span asp-validation-for="Attribute2" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Attribute3" class="control-label"></label>
+            <input asp-for="Attribute3" class="form-control"/>
+            <span asp-validation-for="Attribute3" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Attribute4" class="control-label"></label>
+            <input asp-for="Attribute4" class="form-control"/>
+            <span asp-validation-for="Attribute4" class="text-danger"></span>
+        </div>
 
-
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Status" /> @Html.DisplayNameFor(model => model.Status)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="Status"/> @Html.DisplayNameFor(model => model.Status)
+            </label>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary"/>
+        </div>
+    </form>
 }
 else
 {
@@ -77,9 +86,17 @@ else
     <div class="row">
         <div class="col-md-4">
             <form asp-action="Edit" id="category-edit-from">
-                <input asp-for="ParentId" type="hidden" />
+                <input asp-for="ParentId" type="hidden"/>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id"/>
+                @if (!Model.ParentId.HasValue)
+                {
+                    <div class="form-group">
+                        <label asp-for="TreeName" class="control-label">Tree Name</label>
+                        <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name"/>
+                        <span asp-validation-for="TreeName" class="text-danger"></span>
+                    </div>
+                }
                 <div class="form-group">
                     <label asp-for="Name" class="control-label"></label>
                     <input asp-for="Name" class="form-control"/>

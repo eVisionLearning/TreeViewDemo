@@ -4,15 +4,15 @@
 Completed and Delivered
 
 @Dated: 14 Mar 2024 01:53 AM
-1. Simple way to register and login via Login ID and password
-2. We'll make a separate table to keep Tree Names and their IDs. Tree Names don't have to be unique at this level.
-3. Each user can create a tree and change it whenever they want.
-4. Every tree needs to have at least one node, a parent, and then another parent above that.
-5. Each user can only make one tree.
-6. Each user can look up a tree by its name without needing to log in.
-7. We might add two more search boxes where users can look for a parent or a grandparent. But these are optional.
-8. User can view a specific tree part with these optional search boxes, rather than seeing the whole tree.
-9. Suggestion based tree name first search box.
+--1. Simple way to register and login via Login ID and password
+--2. We'll make a separate table to keep Tree Names. Tree Names don't have to be unique at this level.
+--3. Each user can create a tree and change it whenever they want.
+--4. Every tree needs to have at least one node, a parent, and then another parent above that.
+--5. Each user can only make one tree.
+--6. Each user can look up a tree by its name without needing to log in.
+--7. We might add two more search boxes where users can look for a parent or a grandparent. But these are optional.
+--8. User can view a specific tree part with these optional search boxes, rather than seeing the whole tree.
+--9. Suggestion based tree name first search box.
 
 @Date: 15 Mar 2024 10:00 PM
 1. Show a picture with each node, on hovering, it should transform to large size

@@ -80,30 +80,40 @@ namespace TreeViewDemo.Controllers
         {
             if (!ModelState.IsValid) return View(category);
             category.UserId = _context.GetLoggedInUserId;
-            var obj = new Category
+            if (_context.FilteredCategories().Any())
             {
-                Name = category.GrandParentName,
-                UserId = category.UserId,
-                Childs = new()
-                {
-                    new Category()
-                    {
-                        Name = category.ParentName,
-                        Childs = new()
-                        {
-                            category
-                        },
-                        UserId = category.UserId,
-                    }
-                }
-            };
-            
-            _context.Add(obj);
-            if (!string.IsNullOrEmpty(category.TreeName))
-            {
-                var user = await _context.AppUsers.FirstOrDefaultAsync(m => m.Id == _context.GetLoggedInUserId);
-                user.TreeName = category.TreeName;
+                _context.Add(category);
             }
+            else
+            {
+                var obj = new Category
+                {
+                    Name = category.GrandParentName,
+                    UserId = category.UserId,
+                    Status = true,
+                    Childs = new()
+                    {
+                        new Category()
+                        {
+                            Name = category.ParentName,
+                            Childs = new()
+                            {
+                                category
+                            },
+                            UserId = category.UserId,
+                            Status = true,
+                        }
+                    }
+                };
+
+                _context.Add(obj);
+                if (!string.IsNullOrEmpty(category.TreeName))
+                {
+                    var user = await _context.AppUsers.FirstOrDefaultAsync(m => m.Id == _context.GetLoggedInUserId);
+                    user.TreeName = category.TreeName;
+                }
+            }
+
 
             await _context.SaveChangesAsync();
             return category.Partial
@@ -127,6 +137,9 @@ namespace TreeViewDemo.Controllers
 
             category.BgColor ??= "#ffffff";
             category.TextColor ??= "#000000";
+            if (!category.ParentId.HasValue)
+                category.TreeName = await _context.AppUsers.Where(m => m.Id == _context.GetLoggedInUserId)
+                    .Select(m => m.TreeName).FirstAsync();
 
             if (!p) return View(category);
             category.Partial = true;
@@ -153,6 +166,12 @@ namespace TreeViewDemo.Controllers
                     _context.Update(category);
                     _context.Entry(category).Property(m => m.ParentId).IsModified = false;
                     _context.Entry(category).Property(m => m.UserId).IsModified = false;
+                    if (!string.IsNullOrEmpty(category.TreeName))
+                    {
+                        var user = await _context.AppUsers.Where(m => m.Id == _context.GetLoggedInUserId).FirstAsync();
+                        user.TreeName = category.TreeName;
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -218,13 +237,18 @@ namespace TreeViewDemo.Controllers
             keyword = keyword?.ToLower();
             parentName = parentName?.ToLower();
             grandParentName = grandParentName?.ToLower();
-            
+
+            if (string.IsNullOrEmpty(keyword) && _context.GetLoggedInUserId == 0)
+            {
+                return View(new List<Category> { });
+            }
+
             var categories = await _context.Categories
                 .Include(m => m.Parent)
                 .Include(m => m.Childs).ThenInclude(m => m.Childs).ThenInclude(m => m.Childs)
                 .Include(m => m.User)
                 .ToListAsync();
-            
+
             if (id > 0)
             {
                 var data = categories.Where(m => m.UserId == id).ToList();
@@ -242,6 +266,7 @@ namespace TreeViewDemo.Controllers
                 else
                 {
                     id ??= _context.GetLoggedInUserId;
+                    if (id == 0) id = null;
                 }
 
                 var data = query.Where(m => !id.HasValue || m.UserId == id).ToList();
@@ -253,7 +278,7 @@ namespace TreeViewDemo.Controllers
                         data = _context.LoadChildsRecursively(parent);
                         parent.ParentId = null;
                     }
-                    else if(string.IsNullOrEmpty(grandParentName))
+                    else if (string.IsNullOrEmpty(grandParentName))
                     {
                         data = [];
                     }
@@ -262,7 +287,8 @@ namespace TreeViewDemo.Controllers
 
                 if (!string.IsNullOrEmpty(grandParentName))
                 {
-                    var grandParent = data.Where(m => m.Name?.ToLower() == parentName && m.ParentId.HasValue).Select(m => m.Parent).FirstOrDefault();
+                    var grandParent = data.Where(m => m.Name?.ToLower() == parentName && m.ParentId.HasValue)
+                        .Select(m => m.Parent).FirstOrDefault();
                     if (grandParent != null && grandParent?.Name?.ToLower() == grandParentName)
                     {
                         data = _context.LoadChildsRecursively(grandParent);
@@ -270,7 +296,7 @@ namespace TreeViewDemo.Controllers
                     }
                     else data = [];
                 }
-                
+
                 if (data.Count == 0) return RedirectToAction("Index");
                 if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
                 return View(data);
