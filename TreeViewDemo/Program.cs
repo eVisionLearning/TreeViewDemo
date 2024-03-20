@@ -18,6 +18,7 @@ using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 try
 {
+    await context.Database.MigrateAsync();
     if (!context.AppUsers.Any())
     {
         var user = new AppUser
@@ -31,9 +32,11 @@ try
         user.Password = CoreHandler.GetInstance().Encrypt(user.Password + user.Id);
         await context.SaveChangesAsync();
     }
-    var r = context.Database.ExecuteSqlRaw("UPDATE Categories SET UserId = (SELECT TOP 1 Id from AppUsers) WHERE UserId is null");
-    await context.Database.MigrateAsync();
-} catch (Exception) { }
+}
+catch (Exception)
+{
+    // ignored
+}
 
 // Configure the HTTP request pipeline.
 //if (!app.Environment.IsDevelopment())
