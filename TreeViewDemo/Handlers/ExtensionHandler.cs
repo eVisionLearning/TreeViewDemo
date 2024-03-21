@@ -29,6 +29,25 @@ namespace TreeViewDemo
                 }
             }
         }
+        
+        public static List<Category> LoadParentsRecursively(this AppDbContext db, Category category)
+        {
+            var allParents = new List<Category>();
+            LoadParents(category, db, ref allParents);
+            return allParents;
+        }
+
+        private static void LoadParents(Category category, AppDbContext db, ref List<Category> allParents)
+        {
+            allParents.Add(category);
+            if (category.ParentId == null) return;
+            var parent = db.Categories.Find(category.ParentId);
+            if (parent != null)
+            {
+                LoadParents(parent, db, ref allParents);
+            }
+        }
+
 
         public static Dictionary<string, object> BuildTree(this IEnumerable<Category> categories)
         {

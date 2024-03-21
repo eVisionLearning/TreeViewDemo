@@ -22,6 +22,6 @@ Date: March 15, 2024
 
 @Date 71 Mar 2024 07:15 PM
 Date: March 17, 2024
-1. Include node parent (one level above) for text box 2
-2. Or add Dynamic Text boxes for search
-3. Clicked nodes should be auto centered in the display area/screen
+--2. Or add Dynamic Text boxes for search
+1. Include node parent (one level above) for search text boxes
+2. Clicked nodes should be auto centered in the display area/screen
