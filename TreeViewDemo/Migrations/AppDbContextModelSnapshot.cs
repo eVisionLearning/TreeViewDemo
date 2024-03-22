@@ -97,6 +97,9 @@ namespace TreeViewDemo.Migrations
                     b.Property<string>("BgColor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 

@@ -16,12 +16,12 @@ Completed and Delivered
 
 @Date: 15 Mar 2024 10:00 PM
 Date: March 15, 2024
-1. Display an image alongside each node. When hovered over, it should expand to a larger size.
+1. --Display an image alongside each node. When hovered over, it should expand to a larger size.
 2. When a user creates a node, if the parent and grandparent match with nodes in other trees (at any level), show those all trees.
 3. Provide an "Append" button with each matched tree but only one tree can be appended with current tree.
 
 @Date 71 Mar 2024 07:15 PM
 Date: March 17, 2024
---2. Or add Dynamic Text boxes for search
-1. Include node parent (one level above) for search text boxes
-2. Clicked nodes should be auto centered in the display area/screen
+xx2. Or add Dynamic Text boxes for search
+--1. Include node parent (one level above) for search text boxes
+--2. Clicked nodes should be auto centered in the display area/screen

@@ -76,4 +76,9 @@ public class CoreHandler
         var user = context.AppUserLoginHistories.Where(m => m.Token == cookie).Select(m => m.User).FirstOrDefault();
         return user;
     }
+
+    public string GetUniqueFileName()
+    {
+        return Path.GetRandomFileName().Replace(".", "");
+    }
 }

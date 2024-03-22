@@ -17,21 +17,27 @@ namespace TreeViewDemo.Models
         public string Attribute4 { get; set; }
         public int? ParentId { get; set; }
         public virtual Category Parent { get; set; }
-        
-        [NotMapped]
-        public bool Partial { get; set; }
+
+        [NotMapped] public bool Partial { get; set; }
         public List<Category> Childs { get; set; }
 
         public int UserId { get; set; }
         public virtual AppUser User { get; set; }
 
-        [NotMapped]
-        public string TreeName { get; set; }
-        
-        [NotMapped]
-        public string ParentName { get; set; }
-        
-        [NotMapped]
-        public string GrandParentName { get; set; }
+        public string LogoUrl { get; set; }
+
+        [NotMapped] public IFormFile Logo { get; set; }
+
+        [NotMapped] public string TreeName { get; set; }
+
+        [NotMapped] public string ParentName { get; set; }
+
+        [NotMapped] public string ParentLogoUrl { get; set; }
+        [NotMapped] public IFormFile ParentLogo { get; set; }
+
+        [NotMapped] public string GrandParentName { get; set; }
+
+        [NotMapped] public string GrandParentLogoUrl { get; set; }
+        [NotMapped] public IFormFile GrandParentLogo { get; set; }
     }
 }

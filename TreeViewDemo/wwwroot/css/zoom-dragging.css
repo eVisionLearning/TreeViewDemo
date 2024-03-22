@@ -70,3 +70,19 @@ body{
     white-space: nowrap;
     width: 95vw;
 }
+
+.tree li a img {
+    height: 20px;
+    transform:scale(1.15);
+    transition: 0.75s;
+    position: relative;
+    z-index: 9999999;
+}
+
+.node-image:hover {
+    transform:scale(6);
+    position: relative;
+}
+.tree li a {
+    padding: 5px !important;
+}

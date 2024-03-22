@@ -12,56 +12,93 @@
 else
 {
     <h1>List of Child Categories in <small class="text-primary">@parent.Name</small> </h1>
-    <a class="btn btn-sm btn-info" href="/Categories">Goto Top Level Categories</a>
+    <a class="btn btn-sm btn-info text-white" href="/Categories">Goto Top Level Categories</a>
 }
 
-<p>
-    <a asp-action="Create" asp-route-parentId="@(parent?.Id)">Create @(parent == null ? "Top Level Category" : $"Child Category in {parent.Name}")</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>Parent</th>
-            <th>Childs</th>
-            <th></th>
-        </tr>
+<a class="btn btn-primary btn-sm" asp-action="Create" asp-route-parentId="@(parent?.Id)">Create @(parent == null ? "Top Level Category" : $"Child Category in {parent.Name}")</a>
+<table class="table table-striped mt-2 categories-table">
+    <thead class="bg-info text-white">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>Parent</th>
+        <th class="text-center">Childs</th>
+        <th style="width: 135px;"></th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @if (item.Status)
-                    {
-                        <span class="badge bg-success text-white"> Active </span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger text-white">Not Active</span>
-                    }
-                </td>
-                <td>@(item.Parent?.Name ?? "Top Level")</td>
-                <td><a href="/Categories?ParentId=@item.Id">@item.Childs.Count</a></td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                    @if (item.Childs.Any())
-                    {
-                        <text><a asp-action="Index" asp-route-ParentId="@item.Id">Childs</a> |</text>
-                    }
-                    <a asp-action="Create" asp-route-ParentId="@item.Id">Add Child</a>
-                </td>
-            </tr>
-        }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+
+                @if (!string.IsNullOrEmpty(item.LogoUrl))
+                {
+                    <img src="@item.LogoUrl" class="img img-thumbnail"/>
+                }
+            </td>
+            <td>
+                @if (item.Status)
+                {
+                    <span class="badge bg-info text-white"> Active </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger text-white">Not Active</span>
+                }
+            </td>
+            <td>@(item.Parent?.Name ?? "Top Level")</td>
+            <td class="text-center">
+                <a href="/Categories?ParentId=@item.Id">@item.Childs.Count</a>
+            </td>
+            <td class="fa-1-25">
+                <a asp-action="Edit" asp-route-id="@item.Id" title="Edit">
+                    <i class="fas fa-pen"></i>
+                </a>
+                &nbsp;
+                <a asp-action="Delete" asp-route-id="@item.Id" title="Delete">
+                    <i class="fas fa-trash text-danger"></i>
+                </a>
+                &nbsp;
+                <a asp-action="Create" asp-route-ParentId="@item.Id" title="Add Childs">
+                    <i class="fas fa-plus text-success"></i>
+                </a>
+                &nbsp;
+                @if (item.Childs.Any())
+                {
+                    <text>
+                        <a asp-action="Index" asp-route-ParentId="@item.Id" title="View Childs">
+                            <i class="fa fa-child text-primary"></i>
+                        </a></text>
+                }
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
 
+@section css{
+    <style>
+        a{
+        text-decoration: none;
+        }
+        .fa-1-25{
+        font-size: 1.25em;;
+        }
+       .categories-table td img {
+       max-height: 30px;
+       padding: 1px;
+       float: right;
+       transition: all 0.5s;
+       }
+       
+       .categories-table td img:hover {
+              transform: scale(5,5);
+              }
+    </style>
+}

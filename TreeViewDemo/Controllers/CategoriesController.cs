@@ -79,6 +79,9 @@ namespace TreeViewDemo.Controllers
         public async Task<IActionResult> Create(Category category)
         {
             if (!ModelState.IsValid) return View(category);
+            category.LogoUrl = category.Logo?.SaveAs("categories").Result;
+            category.ParentLogoUrl = category.ParentLogo?.SaveAs("categories").Result;
+            category.GrandParentLogoUrl = category.GrandParentLogo?.SaveAs("categories").Result;
             category.UserId = _context.GetLoggedInUserId;
             if (_context.FilteredCategories().Any())
             {
@@ -91,6 +94,7 @@ namespace TreeViewDemo.Controllers
                     Name = category.GrandParentName,
                     UserId = category.UserId,
                     Status = true,
+                    LogoUrl = category.GrandParentLogoUrl,
                     Childs = new()
                     {
                         new Category()
@@ -102,6 +106,7 @@ namespace TreeViewDemo.Controllers
                             },
                             UserId = category.UserId,
                             Status = true,
+                            LogoUrl = category.ParentLogoUrl
                         }
                     }
                 };
@@ -163,9 +168,13 @@ namespace TreeViewDemo.Controllers
                 try
                 {
                     if (!_context.FilteredCategories().Any(m => m.Id == category.Id)) return NotFound();
+                    category.LogoUrl = category.Logo?.SaveAs("categories").Result;
                     _context.Update(category);
+                    if (string.IsNullOrEmpty(category.LogoUrl))
+                        _context.Entry(category).Property(m => m.LogoUrl).IsModified = false;
                     _context.Entry(category).Property(m => m.ParentId).IsModified = false;
                     _context.Entry(category).Property(m => m.UserId).IsModified = false;
+                    
                     if (!string.IsNullOrEmpty(category.TreeName))
                     {
                         var user = await _context.AppUsers.Where(m => m.Id == _context.GetLoggedInUserId).FirstAsync();

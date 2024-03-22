@@ -81,7 +81,8 @@ setTimeout(() => {
 //    $(this).prev('input').show();
 // });
 
-$(document).on('dblclick', '.input-display', function (e){
+$(document).on('dblclick', '[data-pid] a', function (e){
+    e.stopPropagation();
     // Get the bounding rectangle of the clicked element
     var rect = this.getBoundingClientRect();
 

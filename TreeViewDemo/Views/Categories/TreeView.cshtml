@@ -18,7 +18,7 @@
     <title>Tree View</title>
     <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet"/>
     <link href="~/lib/tree-data/css/sintax.css?v=@Globals.StaticAssetsVersion" rel="stylesheet"/>
-    <link href="~/css/zoom-dragging.css?v=@Globals.StaticAssetsVersion" rel="stylesheet"/>
+    <link href="~/css/zoom-dragging.css?v=@DateTime.UtcNow.Ticks" rel="stylesheet"/>
     <style>
         .hidden{
             display: none;
@@ -137,14 +137,14 @@
 @*     <button onclick="clearLocalStorage()" class="btn btn-info btn-sm">Clear Position</button> *@
 @* </div> *@
 <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="~/lib/tree-data/js/treedata.js" asp-append-version="true"></script>
+<script src="~/lib/tree-data/js/treedata.js?v=@DateTime.UtcNow.Ticks"></script>
 <script>
     var tree = @Html.Raw(JsonConvert.SerializeObject(Model.BuildTree()));
     var editMode = @Html.Raw(Json.Serialize(editMode));
     var modelId = @Html.Raw(Json.Serialize(Model.Select(m => m.Id).FirstOrDefault()))
     TreeData(tree, "#tree");
 </script>
-<script src="/js/zoom-dragging.js?v=@Globals.StaticAssetsVersion"></script>
+<script src="/js/zoom-dragging.js?v=@DateTime.UtcNow.Ticks"></script>
 @* <script src="/js/scroll-to-mid.js?v=@Globals.StaticAssetsVersion"></script> *@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
