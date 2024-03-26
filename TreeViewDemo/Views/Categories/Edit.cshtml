@@ -1,12 +1,12 @@
 ﻿@model TreeViewDemo.Models.Category
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Category";
 }
 
 @if (Model.Partial)
 {
-    <form asp-action="Edit">
+    <form asp-action="Edit" enctype="multipart/form-data">
         <input asp-for="ParentId" type="hidden"/>
         <input asp-for="Partial" type="hidden"/>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -42,6 +42,12 @@
                     <span asp-validation-for="BgColor" class="text-danger"></span>
                 </div>
             </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Logo" class="control-label"></label>
+            <input asp-for="Logo" class="form-control" type="file"/>
+            <span asp-validation-for="Logo" class="text-danger"></span>
         </div>
 
         <hr/>
@@ -85,7 +91,7 @@ else
     <hr/>
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Edit" id="category-edit-from">
+            <form asp-action="Edit" id="category-edit-from" enctype="multipart/form-data">
                 <input asp-for="ParentId" type="hidden"/>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id"/>
@@ -120,7 +126,13 @@ else
                     </div>
                 </div>
 
-                <hr/>
+                <div class="form-group">
+                    <label asp-for="Logo" class="control-label"></label>
+                    <input asp-for="Logo" class="form-control" type="file"/>
+                    <span asp-validation-for="Logo" class="text-danger"></span>
+                </div>
+
+                <br/>
                 <h3>Attributes</h3>
                 <div class="form-group">
                     <label asp-for="Attribute1" class="control-label"></label>

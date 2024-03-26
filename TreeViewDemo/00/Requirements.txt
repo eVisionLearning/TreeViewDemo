@@ -15,6 +15,13 @@ Completed and Delivered
 --9. Suggestion based tree name first search box.
 
 @Date: 15 Mar 2024 10:00 PM
-1. Show a picture with each node, on hovering, it should transform to large size
-2. when user create a node, parent, grand parent and these matches with other (any level) then we want to display those tree with this user
-3. Give button of append (only with one) after appending, 
+Date: March 15, 2024
+1. --Display an image alongside each node. When hovered over, it should expand to a larger size.
+2. When a user creates a node, if the parent and grandparent match with nodes in other trees (at any level), show those all trees.
+3. Provide an "Append" button with each matched tree but only one tree can be appended with current tree.
+
+@Date 71 Mar 2024 07:15 PM
+Date: March 17, 2024
+xx2. Or add Dynamic Text boxes for search
+--1. Include node parent (one level above) for search text boxes
+--2. Clicked nodes should be auto centered in the display area/screen

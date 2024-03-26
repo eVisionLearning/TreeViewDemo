@@ -4,6 +4,7 @@ let zoomFactor = localStorage.getItem('zoomFactor_' + modelId) ? parseFloat(loca
 let storedZoomFactor;
 let isDragging = false;
 let map = document.getElementById('tree-map');
+let body = document.getElementsByTagName('body')[0];
 
 map.style.transformX = localStorage.getItem('transformX_' + modelId) ? parseFloat(localStorage.getItem('transformX_' + modelId)) : 350;
 map.style.transformY = localStorage.getItem('transformY_' + modelId) ? parseFloat(localStorage.getItem('transformY_' + modelId)) : 60;
@@ -12,13 +13,16 @@ map.style.transformY = localStorage.getItem('transformY_' + modelId) ? parseFloa
 map.style.transform = `scale(${zoomFactor}) translate(${map.style.transformX}px, ${map.style.transformY}px)`;
 
 // Function to handle mouse down event
-map.addEventListener('mousedown', (event) => {
-    isDragging = true;
-    storedZoomFactor = zoomFactor;
-    lastX = event.clientX;
-    lastY = event.clientY;
-    event.preventDefault(); // Prevent default behavior
-    map.classList.add('dragging');
+body.addEventListener('mousedown', (event) => {
+    // Check if the click target is not an input element
+    if (event.target.tagName.toLowerCase() !== 'input') {
+        isDragging = true;
+        storedZoomFactor = zoomFactor;
+        lastX = event.clientX;
+        lastY = event.clientY;
+        event.preventDefault(); // Prevent default behavior
+        map.classList.add('dragging');
+    }
 });
 
 document.addEventListener('mouseup', () => {
@@ -71,8 +75,41 @@ setTimeout(() => {
 //     localStorage.clear();
 // }
 
-$(document).on('dblclick', '.input-display', function (e){
-   console.log(e);
-   $(this).hide();
-   $(this).prev('input').show();
+// $(document).on('dblclick', '.input-display', function (e){
+//    console.log(e);
+//    $(this).hide();
+//    $(this).prev('input').show();
+// });
+
+$(document).on('dblclick', '[data-pid] a', function (e){
+    e.stopPropagation();
+    // Get the bounding rectangle of the clicked element
+    var rect = this.getBoundingClientRect();
+
+    // Calculate the position of the clicked element relative to the viewport
+    var x = rect.left + window.scrollX;
+    var y = rect.top + window.scrollY;
+
+    // Calculate the center of the viewport
+    var centerX = window.innerWidth / 2;
+    //var centerY = window.innerHeight / 2;
+    var centerY = 150;
+
+    // Calculate the distance from the clicked element to the center of the viewport
+    var deltaX = centerX - x;
+    var deltaY = centerY - y;
+
+    // Update the transform of the map to move the clicked element to the center of the viewport
+    map.style.transformX = parseInt(map.style.transformX) + deltaX / storedZoomFactor;
+    map.style.transformY = parseInt(map.style.transformY) + deltaY / storedZoomFactor;
+    map.style.transform = `scale(${storedZoomFactor}) translate(${Math.round(map.style.transformX)}px, ${Math.round(map.style.transformY)}px)`;
+});
+
+$(document).on('click', '.reset-position', function (e){
+    $('#tree > ul > li > ul > li > a > span').dblclick();
+});
+
+$(document).on('click', '.reset-zoom', function (e){
+    zoomFactor = storedZoomFactor = 1;
+    map.style.transform = `scale(${storedZoomFactor}) translate(${Math.round(map.style.transformX)}px, ${Math.round(map.style.transformY)}px)`;
 });
