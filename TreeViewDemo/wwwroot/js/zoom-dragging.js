@@ -71,15 +71,6 @@ window.addEventListener('beforeunload', () => {
 setTimeout(() => {
     $('body').removeClass('opacity0');
 }, 1000)
-// function clearLocalStorage(){
-//     localStorage.clear();
-// }
-
-// $(document).on('dblclick', '.input-display', function (e){
-//    console.log(e);
-//    $(this).hide();
-//    $(this).prev('input').show();
-// });
 
 $(document).on('dblclick', '[data-pid] a', function (e){
     e.stopPropagation();
@@ -87,7 +78,7 @@ $(document).on('dblclick', '[data-pid] a', function (e){
     var rect = this.getBoundingClientRect();
 
     // Calculate the position of the clicked element relative to the viewport
-    var x = rect.left + window.scrollX;
+    var x = rect.left + rect.width / 2 + window.scrollX;
     var y = rect.top + window.scrollY;
 
     // Calculate the center of the viewport
@@ -106,7 +97,7 @@ $(document).on('dblclick', '[data-pid] a', function (e){
 });
 
 $(document).on('click', '.reset-position', function (e){
-    $('#tree > ul > li > ul > li > a > span').dblclick();
+    $('#tree > ul > li > ul > li > a > span').trigger('dblclick');
 });
 
 $(document).on('click', '.reset-zoom', function (e){

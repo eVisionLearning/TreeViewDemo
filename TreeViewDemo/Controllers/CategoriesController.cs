@@ -237,8 +237,7 @@ namespace TreeViewDemo.Controllers
         }
 
         [AccessAnonymous]
-        public async Task<IActionResult> TreeView(string keyword, string firstParentName,
-            string secondParentName, string thirdParentName)
+        public async Task<IActionResult> TreeView(string keyword, string firstParentName, string secondParentName, string thirdParentName)
         {
             ViewBag.keyword = keyword;
             ViewBag.firstParentName = firstParentName;
@@ -251,7 +250,7 @@ namespace TreeViewDemo.Controllers
 
             if (string.IsNullOrEmpty(keyword) && _context.GetLoggedInUserId == 0)
             {
-                return View(new List<List<Category>> { });
+                return View(new List<Category> { });
             }
             
             var query = _context.Categories.AsQueryable();
@@ -259,13 +258,15 @@ namespace TreeViewDemo.Controllers
                 ? query.Where(m => m.User.TreeName == keyword)
                 : query.Where(m => m.UserId == _context.GetLoggedInUserId);
 
+            if(!query.Any()) return View(new List<Category> { });
+
             Category thirdParent = null;
             if (!string.IsNullOrEmpty(thirdParentName))
             {
                 thirdParent = _context.Categories.Include(m => m.Parent).FirstOrDefault(m =>
                     m.Name == thirdParentName);
                 if (thirdParent is not { ParentId: not null })
-                    return View(new List<List<Category>>());
+                    return View(new List<Category>());
             }
 
             Category secondParent = null;
@@ -274,7 +275,7 @@ namespace TreeViewDemo.Controllers
                 secondParent = _context.Categories.Include(m => m.Parent).FirstOrDefault(m =>
                     m.Name == secondParentName);
                 if (secondParent == null || (secondParent.ParentId != thirdParent?.Id && thirdParent != null))
-                    return View(new List<List<Category>>());
+                    return View(new List<Category>());
             }
 
             Category firstParent = null;
@@ -283,71 +284,14 @@ namespace TreeViewDemo.Controllers
                 firstParent = _context.Categories.Include(m => m.Parent).FirstOrDefault(m =>
                     m.Name == firstParentName);
                 if (firstParentName == null || (firstParent.ParentId != secondParent?.Id && secondParent != null))
-                    return View(new List<List<Category>>());
+                    return View(new List<Category>());
             }
 
             var treeParent = thirdParent?.Parent ?? secondParent?.Parent ?? firstParent?.Parent ?? await query.FirstOrDefaultAsync();
             treeParent.ParentId = null;
             var data = _context.LoadChildsRecursively(treeParent);
             if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
-            return View(new List<List<Category>>(new[] { data }));
-        }
-        
-        [AccessAnonymous]
-        public async Task<IActionResult> TreeView2(string keyword, string firstParentName,
-            string secondParentName, string thirdParentName)
-        {
-            ViewBag.keyword = keyword;
-            ViewBag.firstParentName = firstParentName;
-            ViewBag.secondParentName = secondParentName;
-            ViewBag.thirdParentName = thirdParentName;
-            keyword = keyword?.ToLower();
-            firstParentName = firstParentName?.ToLower();
-            secondParentName = secondParentName?.ToLower();
-            thirdParentName = thirdParentName?.ToLower();
-
-            if (string.IsNullOrEmpty(keyword) && _context.GetLoggedInUserId == 0)
-            {
-                return View(new List<List<Category>> { });
-            }
-            
-            var query = _context.Categories.AsQueryable();
-            query = !string.IsNullOrEmpty(keyword)
-                ? query.Where(m => m.User.TreeName == keyword)
-                : query.Where(m => m.UserId == _context.GetLoggedInUserId);
-
-            Category thirdParent = null;
-            if (!string.IsNullOrEmpty(thirdParentName))
-            {
-                thirdParent = _context.Categories.Include(m => m.Parent).FirstOrDefault(m =>
-                    m.Name == thirdParentName);
-                if (thirdParent is not { ParentId: not null })
-                    return View(new List<List<Category>>());
-            }
-
-            Category secondParent = null;
-            if (!string.IsNullOrEmpty(secondParentName))
-            {
-                secondParent = _context.Categories.Include(m => m.Parent).FirstOrDefault(m =>
-                    m.Name == secondParentName);
-                if (secondParent == null || (secondParent.ParentId != thirdParent?.Id && thirdParent != null))
-                    return View(new List<List<Category>>());
-            }
-
-            Category firstParent = null;
-            if (!string.IsNullOrEmpty(firstParentName))
-            {
-                firstParent = _context.Categories.Include(m => m.Parent).FirstOrDefault(m =>
-                    m.Name == firstParentName);
-                if (firstParentName == null || (firstParent.ParentId != secondParent?.Id && secondParent != null))
-                    return View(new List<List<Category>>());
-            }
-
-            var treeParent = thirdParent?.Parent ?? secondParent?.Parent ?? firstParent?.Parent ?? await query.FirstOrDefaultAsync();
-            treeParent.ParentId = null;
-            var data = _context.LoadChildsRecursively(treeParent);
-            if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
-            return View(new List<List<Category>>(new[] { data }));
+            return View(data);
         }
 
 

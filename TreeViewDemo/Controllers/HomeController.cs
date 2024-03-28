@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using TreeViewDemo.Data;
 using TreeViewDemo.Models;
 
 namespace TreeViewDemo.Controllers
@@ -7,10 +9,11 @@ namespace TreeViewDemo.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly AppDbContext _context;
+        public HomeController(ILogger<HomeController> logger, AppDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Demo()
@@ -18,8 +21,23 @@ namespace TreeViewDemo.Controllers
             return View();
         }
 
-        public IActionResult Index()
+        public IActionResult Index(bool id = false)
         {
+            if (!_context.Categories.Any() && !id)
+            {
+                return View();
+            }
+
+            if (id && !_context.Categories.Any())
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "DefaultData.sql");
+                int r = _context.Database.ExecuteSqlRaw(System.IO.File.ReadAllText(filePath));
+                if (r == 0)
+                {
+                    var xx = 10;
+                }
+            }
+
             return RedirectToAction("Index", "Categories");
         }
 

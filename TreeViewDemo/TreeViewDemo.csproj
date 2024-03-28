@@ -28,9 +28,4 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\categories\0htytkxrbxx.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\categories\otev5i133bt.jpeg" />
-  </ItemGroup>
-
 </Project>

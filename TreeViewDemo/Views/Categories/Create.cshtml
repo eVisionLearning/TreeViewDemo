@@ -118,14 +118,14 @@ else
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         <script>
             $('#Status').click();
-            
-            $(document).on('change', '#Name, #ParentName, #GrandParentName', function (){
+
+            $(document).on('change', '#Name, #ParentName, #GrandParentName', function () {
                 var name = $('#Name').val();
                 var parentName = $('#ParentName').val();
                 var grandParentName = $('#GrandParentName').val();
-                
-                if (name && parentName && grandParentName){
-                    $.post('/Services/MatchedTrees', { name,  parentName,  grandParentName }, function (res){
+
+                if (name && parentName && grandParentName) {
+                    $.post('/Services/MatchedTrees', { name, parentName, grandParentName }, function (res) {
                         console.log(res);
                     });
                 }

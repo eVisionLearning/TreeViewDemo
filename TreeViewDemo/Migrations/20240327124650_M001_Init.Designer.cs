@@ -12,8 +12,8 @@ using TreeViewDemo.Data;
 namespace TreeViewDemo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240316035451_M005_Misc")]
-    partial class M005_Misc
+    [Migration("20240327124650_M001_Init")]
+    partial class M001_Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,6 +100,9 @@ namespace TreeViewDemo.Migrations
                     b.Property<string>("BgColor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -112,7 +115,7 @@ namespace TreeViewDemo.Migrations
                     b.Property<string>("TextColor")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -143,7 +146,9 @@ namespace TreeViewDemo.Migrations
 
                     b.HasOne("TreeViewDemo.Models.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Parent");
 

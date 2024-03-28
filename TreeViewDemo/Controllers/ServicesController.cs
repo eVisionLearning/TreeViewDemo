@@ -13,7 +13,7 @@ public class ServicesController(AppDbContext context) : Controller
         return Json(!existing);
     }
 
-    public async Task<IActionResult> MatchedTrees(int? id, string name, string parentName, string grandParentName)
+    public async Task<IActionResult> MatchedTrees(string name, string parentName, string grandParentName)
     {
         var existingMatchingNodes = await context.Categories
             .Where(m => m.Name == name && m.Parent.Name == parentName && m.Parent.Parent.Name == grandParentName)
