@@ -152,7 +152,7 @@ else
                                         console.log(m, res.trees);
                                         let treeName = Object.values(res.trees).find(t => Object.values(m).some(f => f.id === t.key))?.value;
                                         var randomClass = 'c_' + Math.random().toString(36).substr(2, 9);
-                                        var treeArea = $(`<div class="tree-merging ${randomClass}"><p class="m-treeName">${treeName} </p></div>`).appendTo('.multiple-tree-area');
+                                        var treeArea = $(`<div class="tree-merging ${randomClass}"><p class="m-treeName">${treeName} <span class="btn-merge-tree">Merge this Tree</span> </p></div>`).appendTo('.multiple-tree-area');
                                         console.log(m);
                                         TreeData(m, '.' + randomClass);
                                     });

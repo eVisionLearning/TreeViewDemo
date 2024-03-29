@@ -41,9 +41,30 @@ body {
 
 .m-treeName {
     background: linear-gradient(#d8d6d6, #eaeaea, #d8d6d6);
-    width:70%;
+    width: 70%;
     margin: 0 auto !important;
-    font-weight:bold;
-    text-align:center;
-    padding:3px 0 5px
+    font-weight: bold;
+    text-align: left;
+    padding: 3px 10px 5px;
+    position: relative;
+}
+
+.btn-merge-tree {
+    float: right;
+    right: 0;
+    position: absolute;
+    background: linear-gradient(#000000, #585858, #000000);
+    color: white;
+    padding: 4px 15px;
+    top: 0px;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+header nav {
+    background: linear-gradient(#d8d6d6, #eaeaea, #d8d6d6)
+}
+table thead, table tfoot {
+    background: linear-gradient(#d8d6d6, #eaeaea, #d8d6d6);
+
 }

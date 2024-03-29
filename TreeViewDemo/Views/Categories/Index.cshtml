@@ -17,7 +17,7 @@ else
 
 <a class="btn btn-primary btn-sm" asp-action="Create" asp-route-parentId="@(parent?.Id)">Create @(parent == null ? "Top Level Category" : $"Child Category in {parent.Name}")</a>
 <table class="table table-striped mt-2 categories-table">
-    <thead class="bg-info text-white">
+    <thead>
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)

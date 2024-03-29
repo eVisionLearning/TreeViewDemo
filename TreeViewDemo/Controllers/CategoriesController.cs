@@ -174,7 +174,7 @@ namespace TreeViewDemo.Controllers
                         _context.Entry(category).Property(m => m.LogoUrl).IsModified = false;
                     _context.Entry(category).Property(m => m.ParentId).IsModified = false;
                     _context.Entry(category).Property(m => m.UserId).IsModified = false;
-                    
+
                     if (!string.IsNullOrEmpty(category.TreeName))
                     {
                         var user = await _context.AppUsers.Where(m => m.Id == _context.GetLoggedInUserId).FirstAsync();
@@ -252,13 +252,13 @@ namespace TreeViewDemo.Controllers
             {
                 return View(new List<Category> { });
             }
-            
+
             var query = _context.Categories.AsQueryable();
             query = !string.IsNullOrEmpty(keyword)
                 ? query.Where(m => m.User.TreeName == keyword)
                 : query.Where(m => m.UserId == _context.GetLoggedInUserId);
 
-            if(!query.Any()) return View(new List<Category> { });
+            if (!query.Any()) return View(new List<Category> { });
 
             Category thirdParent = null;
             if (!string.IsNullOrEmpty(thirdParentName))
@@ -287,9 +287,10 @@ namespace TreeViewDemo.Controllers
                     return View(new List<Category>());
             }
 
-            var treeParent = thirdParent?.Parent ?? secondParent?.Parent ?? firstParent?.Parent ?? await query.FirstOrDefaultAsync();
-            treeParent.ParentId = null;
-            var data = _context.LoadChildsRecursively(treeParent);
+            var treeParents = new List<Category> { thirdParent?.Parent ?? secondParent?.Parent ?? firstParent?.Parent }.Where(m => m != null).ToList();
+            if (!treeParents.Any()) treeParents = await query.Where(m => !m.ParentId.HasValue).ToListAsync();
+
+            var data = treeParents.SelectMany(_context.LoadChildsRecursively).ToList();
             if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
             return View(data);
         }
