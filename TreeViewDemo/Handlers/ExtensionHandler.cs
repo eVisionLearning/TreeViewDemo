@@ -31,6 +31,33 @@ namespace TreeViewDemo
             }
         }
 
+        public static void SaveAllChildrenWithUpdatedParentIds(this AppDbContext db, Category category)
+        {
+            // Load all children recursively
+            var allChildren = db.LoadChildsRecursively(category);
+
+            // Iterate through each child
+            foreach (var child in allChildren)
+            {
+                // Update parent ID
+                child.ParentId = category.Id;
+
+                // Clear the navigation property to avoid conflicts during saving
+                child.Parent = null;
+
+                // If the entity is not already being tracked, mark it as Added
+                if (db.Entry(child).State == EntityState.Detached)
+                {
+                    db.Categories.Add(child); // Assuming Categories is your DbSet<Category>
+                }
+            }
+
+            // Save changes to the database
+            db.SaveChanges();
+        }
+
+
+
         public static KeyValuePair<int, string> GetTreeName(this Category category, AppDbContext db)
         {
             var treeName = db.AppUsers.Where(m => m.Id == category.UserId).Select(m => m.TreeName).FirstOrDefault();

@@ -1,6 +1,7 @@
 'use strict';
 
 function TreeData(data, select) {
+    $(select).css('width', '5000px');
     var main = document.querySelector(select);
     var treecanvas = document.createElement('ul');
     treecanvas.className = 'tree';
@@ -13,6 +14,7 @@ function TreeData(data, select) {
         var liHeight = firstLi.clientHeight; // Get the height of the first li
         treecanvas.style.height = liHeight + 'px'; // Set the ul height to match
     }
+    $(select).css('width', 'auto');
 }
 
 function buildTree(obj, node) {

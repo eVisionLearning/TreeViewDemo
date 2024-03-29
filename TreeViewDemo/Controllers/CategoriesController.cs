@@ -295,103 +295,64 @@ namespace TreeViewDemo.Controllers
             return View(data);
         }
 
-
-        // [AccessAnonymous]
-        // public async Task<IActionResult> TreeView(int? id, string keyword, string firstParentName, string secondParentName, string thirdParentName)
-        // {
-        //     ViewBag.keyword = keyword;
-        //     ViewBag.firstParentName = firstParentName;
-        //     ViewBag.secondParentName = secondParentName;
-        //     ViewBag.thirdParentName = thirdParentName;
-        //     keyword = keyword?.ToLower();
-        //     firstParentName = firstParentName?.ToLower();
-        //     secondParentName = secondParentName?.ToLower();
-        //     thirdParentName = thirdParentName?.ToLower();
-        //
-        //     if (string.IsNullOrEmpty(keyword) && _context.GetLoggedInUserId == 0)
-        //     {
-        //         return View(new List<Category> { });
-        //     }
-        //
-        //     var categories = await _context.Categories
-        //         .Include(m => m.Parent)
-        //         .Include(m => m.Childs).ThenInclude(m => m.Childs).ThenInclude(m => m.Childs)
-        //         .Include(m => m.User)
-        //         .ToListAsync();
-        //
-        //     if (id > 0)
-        //     {
-        //         var data = categories.Where(m => m.UserId == id).ToList();
-        //         if (data.Count == 0) return RedirectToAction("Index");
-        //         if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
-        //         return View(data);
-        //     }
-        //     else
-        //     {
-        //         var query = categories.Where(m => true);
-        //         if (!string.IsNullOrEmpty(keyword))
-        //         {
-        //             query = categories.Where(m => m.User.TreeName?.ToLower() == keyword);
-        //         }
-        //         else
-        //         {
-        //             id ??= _context.GetLoggedInUserId;
-        //             if (id == 0) id = null;
-        //         }
-        //
-        //         var data = query.Where(m => !id.HasValue || m.UserId == id).ToList();
-        //         if (!string.IsNullOrEmpty(firstParentName))
-        //         {
-        //             var firstParent = data.FirstOrDefault(m => m.Name?.ToLower() == firstParentName && m.ParentId.HasValue);
-        //             if (firstParent != null && string.IsNullOrEmpty(secondParentName))
-        //             {
-        //                 data = _context.LoadChildsRecursively(firstParent);
-        //                 firstParent.ParentId = null;
-        //             }
-        //             else if (string.IsNullOrEmpty(secondParentName))
-        //             {
-        //                 data = [];
-        //             }
-        //             //data = data.Any(m => m.Name == parentName && m.ParentId.HasValue) ? data : [];
-        //         }
-        //
-        //         if (!string.IsNullOrEmpty(secondParentName))
-        //         {
-        //             var secondParent = data.Where(m => m.Name?.ToLower() == secondParentName && m.ParentId.HasValue)
-        //                 .Select(m => m.Parent).FirstOrDefault();
-        //             if (secondParent != null && string.IsNullOrEmpty(thirdParentName))
-        //             {
-        //                 data = _context.LoadChildsRecursively(secondParent);
-        //             }
-        //             else if (string.IsNullOrEmpty(thirdParentName))
-        //             {
-        //                 data = [];
-        //             }
-        //         }
-        //         
-        //         if (!string.IsNullOrEmpty(thirdParentName))
-        //         {
-        //             var thirdParent = data.Where(m => m.Name?.ToLower() == thirdParentName && m.ParentId.HasValue)
-        //                 .Select(m => m.Parent).FirstOrDefault();
-        //             if (thirdParent != null)
-        //             {
-        //                 data = _context.LoadChildsRecursively(thirdParent);
-        //             }
-        //             else
-        //             {
-        //                 data = [];
-        //             }
-        //         }
-        //
-        //         if (data.Count > 0)
-        //              if (data.All(m => m.UserId == _context.GetLoggedInUserId)) ViewBag.editMode = true;
-        //         return View(data);
-        //     }
-        // }
-
         private bool CategoryExists(int id)
         {
             return _context.Categories.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> Merge(int id)
+        {
+            if (_context.Categories.Where(m => m.UserId == _context.GetLoggedInUserId).Any())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
+            var category = context.Categories.AsNoTracking().FirstOrDefault(c => c.Id == id);
+            if (category == null)
+            {
+                return null;
+            }
+
+
+            CoreHandler.GetInstance().LoadChildsRecursively(_context, category);
+            //LoadChildsRecursively(category);
+            //UpdateIdsRecursively(category);
+            CoreHandler.GetInstance().UpdateIdsRecursively(_context, category);
+            
+            _context.GetLoggedInUser.TreeName = $"Merged - ${category.Name}";
+
+            _context.Add(category);
+            int r = await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(TreeView));
+        }
+
+        //private void LoadChildsRecursively(Category category)
+        //{
+        //    context.Entry(category).Collection(c => c.Childs).Load();
+
+        //    if (category.Childs != null)
+        //    {
+        //        foreach (var child in category.Childs)
+        //        {
+        //            LoadChildsRecursively(child);
+        //        }
+        //    }
+        //}
+
+        //private void UpdateIdsRecursively(Category category)
+        //{
+        //    category.ParentId = null;
+        //    category.Id = 0;
+        //    category.UserId = _context.GetLoggedInUserId;
+
+        //    if (category.Childs != null)
+        //    {
+        //        foreach (var child in category.Childs)
+        //        {
+        //            UpdateIdsRecursively(child);
+        //        }
+        //    }
+        //}
     }
 }

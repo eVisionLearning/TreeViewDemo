@@ -42,7 +42,6 @@ body {
 .m-treeName {
     background: linear-gradient(#d8d6d6, #eaeaea, #d8d6d6);
     width: 70%;
-    margin: 0 auto !important;
     font-weight: bold;
     text-align: left;
     padding: 3px 10px 5px;
@@ -50,15 +49,15 @@ body {
 }
 
 .btn-merge-tree {
-    float: right;
-    right: 0;
-    position: absolute;
+    position: relative;
     background: linear-gradient(#000000, #585858, #000000);
     color: white;
     padding: 4px 15px;
-    top: 0px;
+    top:1px;
+    border-radius:3px;
     cursor: pointer;
     font-weight: 400;
+    margin-left:15px;
 }
 
 header nav {
@@ -66,5 +65,13 @@ header nav {
 }
 table thead, table tfoot {
     background: linear-gradient(#d8d6d6, #eaeaea, #d8d6d6);
+}
+}
 
+.tree-merging{
+    width:500% !important;
+}
+
+.multiple-tree-area {
+    overflow: auto;
 }

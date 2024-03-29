@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using TreeViewDemo.Data;
@@ -10,15 +11,15 @@ public class CoreHandler
     private static CoreHandler obj;
     private CoreHandler()
     {
-        
+
     }
 
     public static CoreHandler GetInstance()
     {
-        obj ??= new ();
+        obj ??= new();
         return obj;
     }
-    
+
     private string GetEncryptionKey()
     {
         return "23oh2i3bufiyswg8ye23v";
@@ -80,5 +81,33 @@ public class CoreHandler
     public string GetUniqueFileName()
     {
         return Path.GetRandomFileName().Replace(".", "");
+    }
+
+    public void UpdateIdsRecursively(AppDbContext _context, Category category)
+    {
+        category.ParentId = null;
+        category.Id = 0;
+        category.UserId = _context.GetLoggedInUserId;
+
+        if (category.Childs != null)
+        {
+            foreach (var child in category.Childs)
+            {
+                UpdateIdsRecursively(_context, child);
+            }
+        }
+    }
+
+    public void LoadChildsRecursively(AppDbContext _context, Category category)
+    {
+        _context.Entry(category).Collection(c => c.Childs).Load();
+
+        if (category.Childs != null)
+        {
+            foreach (var child in category.Childs)
+            {
+                LoadChildsRecursively(_context, child);
+            }
+        }
     }
 }

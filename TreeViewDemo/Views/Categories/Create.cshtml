@@ -110,7 +110,7 @@ else
             </div>
         </div>
         <div class="col-md-8">
-            <div class="multiple-tree-area"></div>
+            <div class="multiple-tree-area overflow-auto"></div>
         </div>
     </div>
 </form>
@@ -151,8 +151,10 @@ else
                                     res.nodes.forEach(m => {
                                         console.log(m, res.trees);
                                         let treeName = Object.values(res.trees).find(t => Object.values(m).some(f => f.id === t.key))?.value;
+                                        let treeId = Object.values(res.trees).find(t => Object.values(m).some(f => f.id === t.key))?.key;
+                                        console.log('treeId', treeId)
                                         var randomClass = 'c_' + Math.random().toString(36).substr(2, 9);
-                                        var treeArea = $(`<div class="tree-merging ${randomClass}"><p class="m-treeName">${treeName} <span class="btn-merge-tree">Merge this Tree</span> </p></div>`).appendTo('.multiple-tree-area');
+                                        var treeArea = $(`<div class="tree-merging ${randomClass}"><p class="m-treeName">${treeName} <span class="btn-merge-tree" data-id="${treeId}">Merge this Tree</span> </p></div>`).appendTo('.multiple-tree-area');
                                         console.log(m);
                                         TreeData(m, '.' + randomClass);
                                     });
@@ -165,6 +167,13 @@ else
                     });
                 }
             }).mount('#v-app');
+
+            $(document).on('click', '.btn-merge-tree', function () {
+                let id = $(this).data('id');
+                if (confirm('Are you sure you want to merge this tree?')) {
+                    window.location.assign('/Categories/Merge/' + id);
+                }
+            });
         </script>
     }
 }
@@ -173,14 +182,18 @@ else
     <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet" />
     <link href="~/lib/tree-data/css/sintax.css?v=@Globals.StaticAssetsVersion" rel="stylesheet" />
     <style>
-        .tree-merging > ul > li > a {
-            display: none;
+        .tree-merging {
+            width: 500% !important;
         }
 
-        .tree-merging:not(:last-child) {
-            margin: 20px 0;
-            border-bottom: 3px groove silver;
-        }
+            .tree-merging > ul > li > a {
+                display: none;
+            }
+
+            .tree-merging:not(:last-child) {
+                margin: 20px 0;
+                border-bottom: 3px groove silver;
+            }
 
         .multiple-tree-area {
             border-bottom: 3px groove silver;
