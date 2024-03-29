@@ -62,7 +62,7 @@ namespace TreeViewDemo.Controllers
         {
             if (!parentId.HasValue)
             {
-                return View();
+                return View(new Category { GrandParentName = ".Net", ParentName = ".Net Core", Name = "Web App" });
             }
 
             var parent = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == parentId);

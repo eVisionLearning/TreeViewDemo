@@ -62,7 +62,19 @@ body{
     z-index: 999;
     position: fixed;
     right: 10px;
-    top: 10px;
+    top: 0px;
+    padding-top: 5px;
+}
+
+.container-search-area {
+    background: linear-gradient(#d8d6d6, #eaeaea, #d8d6d6);
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 60px;
+    z-index: 999999999;
+    border-bottom: 3px groove #eaeaea;
 }
 
 #map-search-area .search-form{

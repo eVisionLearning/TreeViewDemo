@@ -4,7 +4,7 @@ SET IDENTITY_INSERT [dbo].[AppUsers] ON;
 -- Insert data into AppUsers table
 INSERT INTO [dbo].[AppUsers] ([Id], [LoginId], [Password], [TreeName]) 
 VALUES 
-(2, N'U2', N'V2tKjVyHS//VCwcCSf4ywQ==', NULL);
+(2, N'U2', N'V2tKjVyHS//VCwcCSf4ywQ==', NULL); -- password is same U2
 
 -- Disable IDENTITY_INSERT for AppUsers table
 SET IDENTITY_INSERT [dbo].[AppUsers] OFF;

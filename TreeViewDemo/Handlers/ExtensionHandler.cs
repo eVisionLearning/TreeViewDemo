@@ -17,12 +17,12 @@ namespace TreeViewDemo
             LoadChilds(category, db, ref allChilds);
             return allChilds;
         }
-        
+
         private static void LoadChilds(Category category, AppDbContext db, ref List<Category> allChilds)
         {
             allChilds.Add(category);
             db.Entry(category).Collection(c => c.Childs).Load();
-            if (category.Childs != null && category.Childs.Any())
+            if (category.Childs?.Count != 0)
             {
                 foreach (var child in category.Childs)
                 {
@@ -30,7 +30,14 @@ namespace TreeViewDemo
                 }
             }
         }
-        
+
+        public static KeyValuePair<int, string> GetTreeName(this Category category, AppDbContext db)
+        {
+            var treeName = db.AppUsers.Where(m => m.Id == category.UserId).Select(m => m.TreeName).FirstOrDefault();
+
+            return new KeyValuePair<int, string>(category.Id, treeName);
+        }
+
         // public static List<Category> LoadParentsRecursively(this AppDbContext db, Category category)
         // {
         //     var allParents = new List<Category>();
@@ -87,7 +94,7 @@ namespace TreeViewDemo
 
             return tree;
         }
-        
+
         public static async Task<string> SaveAs(this IFormFile file, string directory, string fileName = null, string extension = null)
         {
             if (file is not { Length: > 0 }) return null;

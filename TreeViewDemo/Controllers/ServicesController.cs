@@ -9,7 +9,7 @@ public class ServicesController(AppDbContext context) : Controller
     // GET
     public IActionResult LoginIdAvailability(int id, string loginId)
     {
-        var existing= context.AppUsers.Any(m => m.LoginId == loginId && m.Id != id);
+        var existing = context.AppUsers.Any(m => m.LoginId == loginId && m.Id != id);
         return Json(!existing);
     }
 
@@ -19,7 +19,12 @@ public class ServicesController(AppDbContext context) : Controller
             .Where(m => m.Name == name && m.Parent.Name == parentName && m.Parent.Parent.Name == grandParentName)
             .Select(m => m.Parent.Parent)
             .ToListAsync();
-        var groupsData = existingMatchingNodes.Select(context.LoadChildsRecursively).Select(m => m.BuildTree()).ToList();
-        return Json(groupsData);
+
+        var treeNames = existingMatchingNodes.Select(m => m.GetTreeName(context)).ToList();
+        existingMatchingNodes.ForEach(m => m.ParentId = null);
+
+        var jsonData = existingMatchingNodes.Select(context.LoadChildsRecursively).Select(m => m.BuildTree()).ToList();
+
+        return Json(new { Nodes = jsonData, Trees = treeNames });
     }
 }

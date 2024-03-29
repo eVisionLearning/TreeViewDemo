@@ -14,39 +14,42 @@ else
 {
     <h4>Create Child Category <span class="text-info">(in @parent.Name)</span></h4>
 }
-<hr/>
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <input type="hidden" asp-for="ParentId" value="@(parent?.Id)"/>
+<hr />
+<div class="loading-v-app">
+    Loading...
+</div>
+<form asp-action="Create" enctype="multipart/form-data">
+    <div class="row" id="v-app" v-cloak>
+        <div class="col-md-4">
+            <input type="hidden" asp-for="ParentId" value="@(parent?.Id)" />
             @if (parent == null && !_db.FilteredCategories().Any())
             {
                 <div class="form-group">
                     <label asp-for="TreeName" class="control-label">Tree Name</label>
-                    <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name"/>
+                    <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name" />
                     <span asp-validation-for="TreeName" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="GrandParentName" class="control-label">Grand Parent Name</label>
-                    <input asp-for="GrandParentName" class="form-control" data-val="true" data-val-required="Enter Tree Grand Parent Name" placeholder="Tree Grand Parent Name"/>
+                    <input asp-for="GrandParentName" class="form-control" data-val="true" data-val-required="Enter Tree Grand Parent Name" placeholder="Tree Grand Parent Name" />
                     <span asp-validation-for="GrandParentName" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="ParentName" class="control-label">Parent Name</label>
-                    <input asp-for="ParentName" class="form-control" data-val="true" data-val-required="Enter Tree Parent Name" placeholder="Tree Parent Name"/>
+                    <input asp-for="ParentName" class="form-control" data-val="true" data-val-required="Enter Tree Parent Name" placeholder="Tree Parent Name" />
                     <span asp-validation-for="ParentName" class="text-danger"></span>
                 </div>
             }
             @if (ViewBag.partial == true)
             {
-                <input asp-for="Partial" value="True" type="hidden"/>
+                <input asp-for="Partial" value="True" type="hidden" />
             }
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Category Name</label>
-                <input asp-for="Name" class="form-control"/>
+                <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
@@ -54,60 +57,63 @@ else
                 <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="TextColor" class="control-label"></label>
-                        <input asp-for="TextColor" class="form-control" value="@(Model?.TextColor ?? "#000000")" type="color"/>
+                        <input asp-for="TextColor" class="form-control" value="@(Model?.TextColor ?? "#000000")" type="color" />
                         <span asp-validation-for="TextColor" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="BgColor" class="control-label"></label>
-                        <input asp-for="BgColor" class="form-control" value="@(Model?.BgColor ?? "#ffffff")" type="color"/>
+                        <input asp-for="BgColor" class="form-control" value="@(Model?.BgColor ?? "#ffffff")" type="color" />
                         <span asp-validation-for="BgColor" class="text-danger"></span>
                     </div>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label asp-for="Logo" class="control-label"></label>
-                <input asp-for="Logo" class="form-control" type="file"/>
+                <input asp-for="Logo" class="form-control" type="file" />
                 <span asp-validation-for="Logo" class="text-danger"></span>
             </div>
 
-            <br/>
+            <br />
             <h3>Attributes</h3>
             <div class="form-group">
                 <label asp-for="Attribute1" class="control-label"></label>
-                <input asp-for="Attribute1" class="form-control"/>
+                <input asp-for="Attribute1" class="form-control" />
                 <span asp-validation-for="Attribute1" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Attribute2" class="control-label"></label>
-                <input asp-for="Attribute2" class="form-control"/>
+                <input asp-for="Attribute2" class="form-control" />
                 <span asp-validation-for="Attribute2" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Attribute3" class="control-label"></label>
-                <input asp-for="Attribute3" class="form-control"/>
+                <input asp-for="Attribute3" class="form-control" />
                 <span asp-validation-for="Attribute3" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Attribute4" class="control-label"></label>
-                <input asp-for="Attribute4" class="form-control"/>
+                <input asp-for="Attribute4" class="form-control" />
                 <span asp-validation-for="Attribute4" class="text-danger"></span>
             </div>
 
 
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Status" value="True"/> @Html.DisplayNameFor(model => model.Status)
+                    <input class="form-check-input" asp-for="Status" value="True" /> @Html.DisplayNameFor(model => model.Status)
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary"/>
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
-        </form>
+        </div>
+        <div class="col-md-8">
+            <div class="multiple-tree-area"></div>
+        </div>
     </div>
-</div>
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -116,20 +122,68 @@ else
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="/lib/vue/vue.global.prod.min.js"></script>
+        <script src="~/lib/tree-data/js/treeData-default.js?v=@DateTime.UtcNow.Ticks"></script>
         <script>
             $('#Status').click();
+            $(".multiple-tree-area").hide();
+            const app = Vue.createApp({
+                data() {
+                    return {
+                        matchedTrees: []
+                    };
+                },
+                created() {
+                    $(".loading-v-app").hide();
 
-            $(document).on('change', '#Name, #ParentName, #GrandParentName', function () {
-                var name = $('#Name').val();
-                var parentName = $('#ParentName').val();
-                var grandParentName = $('#GrandParentName').val();
+                    $(document).on('change', '#Name, #ParentName, #GrandParentName', function () {
+                        var name = $('#Name').val();
+                        var parentName = $('#ParentName').val();
+                        var grandParentName = $('#GrandParentName').val();
 
-                if (name && parentName && grandParentName) {
-                    $.post('/Services/MatchedTrees', { name, parentName, grandParentName }, function (res) {
-                        console.log(res);
+                        if (name && parentName && grandParentName) {
+                            $.post('/Services/MatchedTrees', { name, parentName, grandParentName }, function (res) {
+
+                                if (Array.isArray(res.nodes) && res.nodes.length) {
+                                    //app.matchedTrees = res;
+                                    if (res.nodes.length > 0) $(".multiple-tree-area").show();
+                                    else $(".multiple-tree-area").hide();
+                                    res.nodes.forEach(m => {
+                                        console.log(m, res.trees);
+                                        let treeName = Object.values(res.trees).find(t => Object.values(m).some(f => f.id === t.key))?.value;
+                                        var randomClass = 'c_' + Math.random().toString(36).substr(2, 9);
+                                        var treeArea = $(`<div class="tree-merging ${randomClass}"><p class="m-treeName">${treeName} </p></div>`).appendTo('.multiple-tree-area');
+                                        console.log(m);
+                                        TreeData(m, '.' + randomClass);
+                                    });
+                                } else {
+                                    app.matchedTrees = [];
+                                }
+
+                            });
+                        }
                     });
                 }
-            });
+            }).mount('#v-app');
         </script>
     }
+}
+
+@section css {
+    <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet" />
+    <link href="~/lib/tree-data/css/sintax.css?v=@Globals.StaticAssetsVersion" rel="stylesheet" />
+    <style>
+        .tree-merging > ul > li > a {
+            display: none;
+        }
+
+        .tree-merging:not(:last-child) {
+            margin: 20px 0;
+            border-bottom: 3px groove silver;
+        }
+
+        .multiple-tree-area {
+            border-bottom: 3px groove silver;
+        }
+    </style>
 }
