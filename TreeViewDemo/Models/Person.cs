@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace TreeViewDemo.Models
 {
-    public class Category
+    public class Person
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -16,15 +16,15 @@ namespace TreeViewDemo.Models
         public string Attribute3 { get; set; }
         public string Attribute4 { get; set; }
         public int? ParentId { get; set; }
-        public virtual Category Parent { get; set; }
+        public virtual Person Parent { get; set; }
 
         [NotMapped] public bool Partial { get; set; }
-        public List<Category> Childs { get; set; }
+        public List<Person> Childs { get; set; }
 
         public int UserId { get; set; }
         public virtual AppUser User { get; set; }
 
-        public string LogoUrl { get; set; }
+        public string PhotoUrl { get; set; }
 
         [NotMapped] public IFormFile Logo { get; set; }
 

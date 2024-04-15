@@ -12,27 +12,27 @@ using TreeViewDemo.Models;
 namespace TreeViewDemo.Controllers
 {
     [Authorized]
-    public class CategoriesController(AppDbContext context) : Controller
+    public class PersonsController(AppDbContext context) : Controller
     {
         private readonly AppDbContext _context = context;
 
-        // GET: Categories
+        // GET: persons
         public async Task<IActionResult> Index(int? parentId)
         {
             if (parentId.HasValue)
             {
-                var parent = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == parentId);
+                var parent = await _context.FilteredPersons().FirstOrDefaultAsync(m => m.Id == parentId);
                 if (parent == null) return RedirectToAction("Index");
                 ViewBag.parent = parent;
             }
 
-            var data = await _context.FilteredCategories().Where(m => m.ParentId == parentId)
+            var data = await _context.FilteredPersons().Where(m => m.ParentId == parentId)
                 .Include(m => m.Parent)
                 .Include(m => m.Childs).ToListAsync();
             return View(data);
         }
 
-        // GET: Categories/Details/5
+        // GET: persons/Details/5
         public async Task<IActionResult> Childs(int? id)
         {
             if (id == null)
@@ -40,93 +40,93 @@ namespace TreeViewDemo.Controllers
                 return NotFound();
             }
 
-            var categories = await _context.FilteredCategories()
+            var persons = await _context.FilteredPersons()
                 .Include(m => m.Parent)
                 .Include(m => m.Childs)
                 .ToListAsync();
 
-            var category = await _context.FilteredCategories()
+            var person = await _context.FilteredPersons()
                 .Include(m => m.Parent)
                 .Include(m => m.Childs)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (person == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(person);
         }
 
-        // GET: Categories/Create
+        // GET: persons/Create
         public async Task<IActionResult> Create(int? parentId, bool partial = false)
         {
             if (!parentId.HasValue)
             {
-                return View(new Category { GrandParentName = ".Net", ParentName = ".Net Core", Name = "Web App" });
+                return View(new Person { GrandParentName = ".Net", ParentName = ".Net Core", Name = "Web App" });
             }
 
-            var parent = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == parentId);
+            var parent = await _context.FilteredPersons().FirstOrDefaultAsync(m => m.Id == parentId);
             ViewBag.parent = parent;
             ViewBag.partial = partial;
             return View();
         }
 
-        // POST: Categories/Create
+        // POST: persons/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(Person person)
         {
-            if (!ModelState.IsValid) return View(category);
-            category.LogoUrl = category.Logo?.SaveAs("categories").Result;
-            category.ParentLogoUrl = category.ParentLogo?.SaveAs("categories").Result;
-            category.GrandParentLogoUrl = category.GrandParentLogo?.SaveAs("categories").Result;
-            category.UserId = _context.GetLoggedInUserId;
-            if (_context.FilteredCategories().Any())
+            if (!ModelState.IsValid) return View(person);
+            person.PhotoUrl = person.Logo?.SaveAs("persons").Result;
+            person.ParentLogoUrl = person.ParentLogo?.SaveAs("persons").Result;
+            person.GrandParentLogoUrl = person.GrandParentLogo?.SaveAs("persons").Result;
+            person.UserId = _context.GetLoggedInUserId;
+            if (_context.FilteredPersons().Any())
             {
-                _context.Add(category);
+                _context.Add(person);
             }
             else
             {
-                var obj = new Category
+                var obj = new Person
                 {
-                    Name = category.GrandParentName,
-                    UserId = category.UserId,
+                    Name = person.GrandParentName,
+                    UserId = person.UserId,
                     Status = true,
-                    LogoUrl = category.GrandParentLogoUrl,
+                    PhotoUrl = person.GrandParentLogoUrl,
                     Childs = new()
                     {
-                        new Category()
+                        new Person()
                         {
-                            Name = category.ParentName,
+                            Name = person.ParentName,
                             Childs = new()
                             {
-                                category
+                                person
                             },
-                            UserId = category.UserId,
+                            UserId = person.UserId,
                             Status = true,
-                            LogoUrl = category.ParentLogoUrl
+                            PhotoUrl = person.ParentLogoUrl
                         }
                     }
                 };
 
                 _context.Add(obj);
-                if (!string.IsNullOrEmpty(category.TreeName))
+                if (!string.IsNullOrEmpty(person.TreeName))
                 {
                     var user = await _context.AppUsers.FirstOrDefaultAsync(m => m.Id == _context.GetLoggedInUserId);
-                    user.TreeName = category.TreeName;
+                    user.TreeName = person.TreeName;
                 }
             }
 
 
             await _context.SaveChangesAsync();
-            return category.Partial
+            return person.Partial
                 ? RedirectToAction("TreeView")
-                : RedirectToAction(nameof(Index), new { category.ParentId });
+                : RedirectToAction(nameof(Index), new { person.ParentId });
         }
 
-        // GET: Categories/Edit/5
+        // GET: persons/Edit/5
         public async Task<IActionResult> Edit(int? id, bool p = false)
         {
             if (id == null)
@@ -134,31 +134,31 @@ namespace TreeViewDemo.Controllers
                 return NotFound();
             }
 
-            var category = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            var person = await _context.FilteredPersons().FirstOrDefaultAsync(m => m.Id == id);
+            if (person == null)
             {
                 return NotFound();
             }
 
-            category.BgColor ??= "#ffffff";
-            category.TextColor ??= "#000000";
-            if (!category.ParentId.HasValue)
-                category.TreeName = await _context.AppUsers.Where(m => m.Id == _context.GetLoggedInUserId)
+            person.BgColor ??= "#ffffff";
+            person.TextColor ??= "#000000";
+            if (!person.ParentId.HasValue)
+                person.TreeName = await _context.AppUsers.Where(m => m.Id == _context.GetLoggedInUserId)
                     .Select(m => m.TreeName).FirstAsync();
 
-            if (!p) return View(category);
-            category.Partial = true;
-            return PartialView("~/Views/Categories/Edit.cshtml", category);
+            if (!p) return View(person);
+            person.Partial = true;
+            return PartialView("~/Views/Persons/Edit.cshtml", person);
         }
 
-        // POST: Categories/Edit/5
+        // POST: persons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Category category)
+        public async Task<IActionResult> Edit(int id, Person person)
         {
-            if (id != category.Id)
+            if (id != person.Id)
             {
                 return NotFound();
             }
@@ -167,25 +167,25 @@ namespace TreeViewDemo.Controllers
             {
                 try
                 {
-                    if (!_context.FilteredCategories().Any(m => m.Id == category.Id)) return NotFound();
-                    category.LogoUrl = category.Logo?.SaveAs("categories").Result;
-                    _context.Update(category);
-                    if (string.IsNullOrEmpty(category.LogoUrl))
-                        _context.Entry(category).Property(m => m.LogoUrl).IsModified = false;
-                    _context.Entry(category).Property(m => m.ParentId).IsModified = false;
-                    _context.Entry(category).Property(m => m.UserId).IsModified = false;
+                    if (!_context.FilteredPersons().Any(m => m.Id == person.Id)) return NotFound();
+                    person.PhotoUrl = person.Logo?.SaveAs("persons").Result;
+                    _context.Update(person);
+                    if (string.IsNullOrEmpty(person.PhotoUrl))
+                        _context.Entry(person).Property(m => m.PhotoUrl).IsModified = false;
+                    _context.Entry(person).Property(m => m.ParentId).IsModified = false;
+                    _context.Entry(person).Property(m => m.UserId).IsModified = false;
 
-                    if (!string.IsNullOrEmpty(category.TreeName))
+                    if (!string.IsNullOrEmpty(person.TreeName))
                     {
                         var user = await _context.AppUsers.Where(m => m.Id == _context.GetLoggedInUserId).FirstAsync();
-                        user.TreeName = category.TreeName;
+                        user.TreeName = person.TreeName;
                     }
 
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!personExists(person.Id))
                     {
                         return NotFound();
                     }
@@ -195,15 +195,15 @@ namespace TreeViewDemo.Controllers
                     }
                 }
 
-                return category.Partial
+                return person.Partial
                     ? RedirectToAction("TreeView")
-                    : RedirectToAction(nameof(Index), new { category.ParentId });
+                    : RedirectToAction(nameof(Index), new { person.ParentId });
             }
 
-            return View(category);
+            return View(person);
         }
 
-        // GET: Categories/Delete/5
+        // GET: persons/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -211,25 +211,25 @@ namespace TreeViewDemo.Controllers
                 return NotFound();
             }
 
-            var category = await _context.FilteredCategories()
+            var person = await _context.FilteredPersons()
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (person == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(person);
         }
 
-        // POST: Categories/Delete/5
+        // POST: persons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.FilteredCategories().FirstOrDefaultAsync(m => m.Id == id);
-            if (category != null)
+            var person = await _context.FilteredPersons().FirstOrDefaultAsync(m => m.Id == id);
+            if (person != null)
             {
-                _context.Categories.Remove(category);
+                _context.Persons.Remove(person);
             }
 
             await _context.SaveChangesAsync();
@@ -250,44 +250,44 @@ namespace TreeViewDemo.Controllers
 
             if (string.IsNullOrEmpty(keyword) && _context.GetLoggedInUserId == 0)
             {
-                return View(new List<Category> { });
+                return View(new List<Person> { });
             }
 
-            var query = _context.Categories.AsQueryable();
+            var query = _context.Persons.AsQueryable();
             query = !string.IsNullOrEmpty(keyword)
                 ? query.Where(m => m.User.TreeName == keyword)
                 : query.Where(m => m.UserId == _context.GetLoggedInUserId);
 
-            if (!query.Any()) return View(new List<Category> { });
+            if (!query.Any()) return View(new List<Person> { });
 
-            Category thirdParent = null;
+            Person thirdParent = null;
             if (!string.IsNullOrEmpty(thirdParentName))
             {
-                thirdParent = _context.Categories.Include(m => m.Parent).FirstOrDefault(m =>
+                thirdParent = _context.Persons.Include(m => m.Parent).FirstOrDefault(m =>
                     m.Name == thirdParentName);
                 if (thirdParent is not { ParentId: not null })
-                    return View(new List<Category>());
+                    return View(new List<Person>());
             }
 
-            Category secondParent = null;
+            Person secondParent = null;
             if (!string.IsNullOrEmpty(secondParentName))
             {
-                secondParent = _context.Categories.Include(m => m.Parent).FirstOrDefault(m =>
+                secondParent = _context.Persons.Include(m => m.Parent).FirstOrDefault(m =>
                     m.Name == secondParentName);
                 if (secondParent == null || (secondParent.ParentId != thirdParent?.Id && thirdParent != null))
-                    return View(new List<Category>());
+                    return View(new List<Person>());
             }
 
-            Category firstParent = null;
+            Person firstParent = null;
             if (!string.IsNullOrEmpty(firstParentName))
             {
-                firstParent = _context.Categories.Include(m => m.Parent).FirstOrDefault(m =>
+                firstParent = _context.Persons.Include(m => m.Parent).FirstOrDefault(m =>
                     m.Name == firstParentName);
                 if (firstParentName == null || (firstParent.ParentId != secondParent?.Id && secondParent != null))
-                    return View(new List<Category>());
+                    return View(new List<Person>());
             }
 
-            var treeParents = new List<Category> { thirdParent?.Parent ?? secondParent?.Parent ?? firstParent?.Parent }.Where(m => m != null).ToList();
+            var treeParents = new List<Person> { thirdParent?.Parent ?? secondParent?.Parent ?? firstParent?.Parent }.Where(m => m != null).ToList();
             if (!treeParents.Any()) treeParents = await query.Where(m => !m.ParentId.HasValue).ToListAsync();
 
             var data = treeParents.SelectMany(_context.LoadChildsRecursively).ToList();
@@ -295,60 +295,59 @@ namespace TreeViewDemo.Controllers
             return View(data);
         }
 
-        private bool CategoryExists(int id)
+        private bool personExists(int id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            return _context.Persons.Any(e => e.Id == id);
         }
 
         public async Task<IActionResult> Merge(int id)
         {
-            if (_context.Categories.Where(m => m.UserId == _context.GetLoggedInUserId).Any())
+            if (_context.Persons.Any(m => m.UserId == _context.GetLoggedInUserId))
             {
                 return RedirectToAction("Index", "Home");
             }
 
 
-            var category = context.Categories.AsNoTracking().FirstOrDefault(c => c.Id == id);
-            if (category == null)
+            var person = context.Persons.AsNoTracking().FirstOrDefault(c => c.Id == id);
+            if (person == null)
             {
                 return null;
             }
-
-
-            CoreHandler.GetInstance().LoadChildsRecursively(_context, category);
-            //LoadChildsRecursively(category);
-            //UpdateIdsRecursively(category);
-            CoreHandler.GetInstance().UpdateIdsRecursively(_context, category);
             
-            _context.GetLoggedInUser.TreeName = $"Merged - ${category.Name}";
+            CoreHandler.GetInstance().LoadChildsRecursively(_context, person);
+            //LoadChildsRecursively(person);
+            //UpdateIdsRecursively(person);
+            CoreHandler.GetInstance().UpdateIdsRecursively(_context, person);
+            
+            _context.GetLoggedInUser.TreeName = $"Merged - ${person.Name}";
 
-            _context.Add(category);
+            _context.Add(person);
             int r = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(TreeView));
         }
 
-        //private void LoadChildsRecursively(Category category)
+        //private void LoadChildsRecursively(person person)
         //{
-        //    context.Entry(category).Collection(c => c.Childs).Load();
+        //    context.Entry(person).Collection(c => c.Childs).Load();
 
-        //    if (category.Childs != null)
+        //    if (person.Childs != null)
         //    {
-        //        foreach (var child in category.Childs)
+        //        foreach (var child in person.Childs)
         //        {
         //            LoadChildsRecursively(child);
         //        }
         //    }
         //}
 
-        //private void UpdateIdsRecursively(Category category)
+        //private void UpdateIdsRecursively(person person)
         //{
-        //    category.ParentId = null;
-        //    category.Id = 0;
-        //    category.UserId = _context.GetLoggedInUserId;
+        //    person.ParentId = null;
+        //    person.Id = 0;
+        //    person.UserId = _context.GetLoggedInUserId;
 
-        //    if (category.Childs != null)
+        //    if (person.Childs != null)
         //    {
-        //        foreach (var child in category.Childs)
+        //        foreach (var child in person.Childs)
         //        {
         //            UpdateIdsRecursively(child);
         //        }

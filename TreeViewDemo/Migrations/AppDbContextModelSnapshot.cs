@@ -74,7 +74,7 @@ namespace TreeViewDemo.Migrations
                     b.ToTable("AppUserLoginHistories");
                 });
 
-            modelBuilder.Entity("TreeViewDemo.Models.Category", b =>
+            modelBuilder.Entity("TreeViewDemo.Models.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,14 +97,14 @@ namespace TreeViewDemo.Migrations
                     b.Property<string>("BgColor")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LogoUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -121,7 +121,7 @@ namespace TreeViewDemo.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Persons");
                 });
 
             modelBuilder.Entity("TreeViewDemo.Models.AppUserLoginHistory", b =>
@@ -135,9 +135,9 @@ namespace TreeViewDemo.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TreeViewDemo.Models.Category", b =>
+            modelBuilder.Entity("TreeViewDemo.Models.Person", b =>
                 {
-                    b.HasOne("TreeViewDemo.Models.Category", "Parent")
+                    b.HasOne("TreeViewDemo.Models.Person", "Parent")
                         .WithMany("Childs")
                         .HasForeignKey("ParentId");
 
@@ -157,7 +157,7 @@ namespace TreeViewDemo.Migrations
                     b.Navigation("Logins");
                 });
 
-            modelBuilder.Entity("TreeViewDemo.Models.Category", b =>
+            modelBuilder.Entity("TreeViewDemo.Models.Person", b =>
                 {
                     b.Navigation("Childs");
                 });

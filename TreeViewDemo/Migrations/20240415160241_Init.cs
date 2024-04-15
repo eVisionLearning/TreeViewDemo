@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TreeViewDemo.Migrations
 {
     /// <inheritdoc />
-    public partial class M001_Init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,7 +48,7 @@ namespace TreeViewDemo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Persons",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -63,21 +63,21 @@ namespace TreeViewDemo.Migrations
                     Attribute4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ParentId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_Persons", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Categories_AppUsers_UserId",
+                        name: "FK_Persons_AppUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Categories_Categories_ParentId",
+                        name: "FK_Persons_Persons_ParentId",
                         column: x => x.ParentId,
-                        principalTable: "Categories",
+                        principalTable: "Persons",
                         principalColumn: "Id");
                 });
 
@@ -87,13 +87,13 @@ namespace TreeViewDemo.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_ParentId",
-                table: "Categories",
+                name: "IX_Persons_ParentId",
+                table: "Persons",
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_UserId",
-                table: "Categories",
+                name: "IX_Persons_UserId",
+                table: "Persons",
                 column: "UserId");
         }
 
@@ -104,7 +104,7 @@ namespace TreeViewDemo.Migrations
                 name: "AppUserLoginHistories");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Persons");
 
             migrationBuilder.DropTable(
                 name: "AppUsers");

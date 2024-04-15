@@ -2,7 +2,7 @@
 @using TreeViewDemo.Data
 @using Microsoft.EntityFrameworkCore
 @inject AppDbContext _db
-@model IEnumerable<Category>
+@model IEnumerable<Person>
 @{
     Layout = null;
     bool editMode = ViewBag.editMode ?? false;
@@ -18,7 +18,7 @@
     <title>Tree View</title>
     <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet" />
     <link href="~/lib/tree-data/css/sintax.css?v=@Globals.StaticAssetsVersion" rel="stylesheet" />
-    <link href="~/css/zoom-dragging.css?v=@DateTime.UtcNow.Ticks" rel="stylesheet" />
+    <link href="~/css/zoom-dragging.css" asp-append-version="true" rel="stylesheet" />
     <style>
         .hidden {
             display: none;
@@ -32,7 +32,6 @@
             visibility: hidden;
         }
     </style>
-    <link href="/css/zoom-dragging.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
@@ -47,7 +46,7 @@
                 </div>
                 <div class="modal-body" id="edit-modal-body">
                     body
-                    @* @{ await Html.RenderPartialAsync("~/Views/Categories/Edit.cshtml", new Category { Partial  = true }, null); } *@
+                    @* @{ await Html.RenderPartialAsync("~/Views/Persons/Edit.cshtml", new Person { Partial  = true }, null); } *@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -60,7 +59,7 @@
         <div class="row" id="map-search-area">
             <div class="col-md-12">
                 <div class="search-form">
-                    <form asp-controller="Categories" asp-action="TreeView">
+                    <form asp-controller="Persons" asp-action="TreeView">
                         <div class="row">
                             <div class="col-md-2">
                                 <input type="search" class="form-control float-start m-1 col-md-3" name="keyword" placeholder="Search via Tree Name" required="required" list="tree-list" value="@ViewBag.keyword" />
@@ -99,7 +98,7 @@
 
 
                         <datalist id="tree-list">
-                            @foreach (var item in _db.Categories.Select(m => m.User.TreeName).Distinct().ToList())
+                            @foreach (var item in _db.Persons.Select(m => m.User.TreeName).Distinct().ToList())
                             {
                                 <option value="@item">@item</option>
                             }

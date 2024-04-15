@@ -1,18 +1,18 @@
 ﻿@using TreeViewDemo.Data
-@model TreeViewDemo.Models.Category
+@model TreeViewDemo.Models.Person
 @inject AppDbContext _db
 @{
     ViewData["Title"] = "Create";
-    Category parent = ViewBag.parent;
+    Person parent = ViewBag.parent;
 }
 
 @if (parent == null)
 {
-    <h4>Create Top Level Category</h4>
+    <h4>Create Top Level Person</h4>
 }
 else
 {
-    <h4>Create Child Category <span class="text-info">(in @parent.Name)</span></h4>
+    <h4>Create Child Person <span class="text-info">(in @parent.Name)</span></h4>
 }
 <hr />
 <div class="loading-v-app">
@@ -22,7 +22,7 @@ else
     <div class="row" id="v-app" v-cloak>
         <div class="col-md-4">
             <input type="hidden" asp-for="ParentId" value="@(parent?.Id)" />
-            @if (parent == null && !_db.FilteredCategories().Any())
+            @if (parent == null && !_db.FilteredPersons().Any())
             {
                 <div class="form-group">
                     <label asp-for="TreeName" class="control-label">Tree Name</label>
@@ -48,7 +48,7 @@ else
             }
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label">Category Name</label>
+                <label asp-for="Name" class="control-label">Person Name</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>

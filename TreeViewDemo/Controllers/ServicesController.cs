@@ -15,7 +15,7 @@ public class ServicesController(AppDbContext context) : Controller
 
     public async Task<IActionResult> MatchedTrees(string name, string parentName, string grandParentName)
     {
-        var existingMatchingNodes = await context.Categories
+        var existingMatchingNodes = await context.Persons
             .Where(m => m.Name == name && m.Parent.Name == parentName && m.Parent.Parent.Name == grandParentName)
             .Select(m => m.Parent.Parent)
             .ToListAsync();

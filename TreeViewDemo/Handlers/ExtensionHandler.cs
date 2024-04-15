@@ -6,41 +6,41 @@ namespace TreeViewDemo
 {
     public static class ExtensionHandler
     {
-        public static IQueryable<Category> FilteredCategories(this AppDbContext context)
+        public static IQueryable<Person> FilteredPersons(this AppDbContext context)
         {
-            return context.Categories.Where(m => m.UserId == context.GetLoggedInUserId);
+            return context.Persons.Where(m => m.UserId == context.GetLoggedInUserId);
         }
 
-        public static List<Category> LoadChildsRecursively(this AppDbContext db, Category category)
+        public static List<Person> LoadChildsRecursively(this AppDbContext db, Person person)
         {
-            var allChilds = new List<Category>();
-            LoadChilds(category, db, ref allChilds);
+            var allChilds = new List<Person>();
+            LoadChilds(person, db, ref allChilds);
             return allChilds;
         }
 
-        private static void LoadChilds(Category category, AppDbContext db, ref List<Category> allChilds)
+        private static void LoadChilds(Person person, AppDbContext db, ref List<Person> allChilds)
         {
-            allChilds.Add(category);
-            db.Entry(category).Collection(c => c.Childs).Load();
-            if (category.Childs?.Count != 0)
+            allChilds.Add(person);
+            db.Entry(person).Collection(c => c.Childs).Load();
+            if (person.Childs?.Count != 0)
             {
-                foreach (var child in category.Childs)
+                foreach (var child in person.Childs)
                 {
                     LoadChilds(child, db, ref allChilds);
                 }
             }
         }
 
-        public static void SaveAllChildrenWithUpdatedParentIds(this AppDbContext db, Category category)
+        public static void SaveAllChildrenWithUpdatedParentIds(this AppDbContext db, Person person)
         {
             // Load all children recursively
-            var allChildren = db.LoadChildsRecursively(category);
+            var allChildren = db.LoadChildsRecursively(person);
 
             // Iterate through each child
             foreach (var child in allChildren)
             {
                 // Update parent ID
-                child.ParentId = category.Id;
+                child.ParentId = person.Id;
 
                 // Clear the navigation property to avoid conflicts during saving
                 child.Parent = null;
@@ -48,7 +48,7 @@ namespace TreeViewDemo
                 // If the entity is not already being tracked, mark it as Added
                 if (db.Entry(child).State == EntityState.Detached)
                 {
-                    db.Categories.Add(child); // Assuming Categories is your DbSet<Category>
+                    db.Persons.Add(child); // Assuming Categories is your DbSet<Person>
                 }
             }
 
@@ -58,32 +58,32 @@ namespace TreeViewDemo
 
 
 
-        public static KeyValuePair<int, string> GetTreeName(this Category category, AppDbContext db)
+        public static KeyValuePair<int, string> GetTreeName(this Person person, AppDbContext db)
         {
-            var treeName = db.AppUsers.Where(m => m.Id == category.UserId).Select(m => m.TreeName).FirstOrDefault();
+            var treeName = db.AppUsers.Where(m => m.Id == person.UserId).Select(m => m.TreeName).FirstOrDefault();
 
-            return new KeyValuePair<int, string>(category.Id, treeName);
+            return new KeyValuePair<int, string>(person.Id, treeName);
         }
 
-        // public static List<Category> LoadParentsRecursively(this AppDbContext db, Category category)
+        // public static List<Person> LoadParentsRecursively(this AppDbContext db, Person person)
         // {
-        //     var allParents = new List<Category>();
-        //     LoadParents(category, db, ref allParents);
+        //     var allParents = new List<Person>();
+        //     LoadParents(person, db, ref allParents);
         //     return allParents;
         // }
         //
-        // private static void LoadParents(Category category, AppDbContext db, ref List<Category> allParents)
+        // private static void LoadParents(Person person, AppDbContext db, ref List<Person> allParents)
         // {
-        //     allParents.Add(category);
-        //     if (category.ParentId == null) return;
-        //     var parent = db.Categories.Find(category.ParentId);
+        //     allParents.Add(person);
+        //     if (person.ParentId == null) return;
+        //     var parent = db.Persons.Find(person.ParentId);
         //     if (parent != null)
         //     {
         //         LoadParents(parent, db, ref allParents);
         //     }
         // }
 
-        public static Dictionary<string, object> BuildTree(this IEnumerable<Category> categories)
+        public static Dictionary<string, object> BuildTree(this IEnumerable<Person> persons)
         {
             var tree = new Dictionary<string, object>
             {
@@ -98,25 +98,25 @@ namespace TreeViewDemo
                 }
             };
 
-            foreach (var category in categories)
+            foreach (var person in persons)
             {
                 var node = new Dictionary<string, object>
                 {
-                    { "id", category.Id },
-                    { "value", category.Name },
-                    { "logoUrl", category.LogoUrl },
-                    { "parent", category.ParentId.HasValue ? $"_{category.ParentId}" : "root" },
-                    { "parentId", category.ParentId },
-                    { "color", category.TextColor },
-                    { "bgColor", category.BgColor },
+                    { "id", person.Id },
+                    { "value", person.Name },
+                    { "logoUrl", person.PhotoUrl },
+                    { "parent", person.ParentId.HasValue ? $"_{person.ParentId}" : "root" },
+                    { "parentId", person.ParentId },
+                    { "color", person.TextColor },
+                    { "bgColor", person.BgColor },
                     {
                         "attrs",
                         new string[]
-                            { category.Attribute1, category.Attribute2, category.Attribute3, category.Attribute4 }
+                            { person.Attribute1, person.Attribute2, person.Attribute3, person.Attribute4 }
                     }
                 };
 
-                tree.Add($"_{category.Id}", node);
+                tree.Add($"_{person.Id}", node);
             }
 
             return tree;

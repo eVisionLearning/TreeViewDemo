@@ -83,28 +83,28 @@ public class CoreHandler
         return Path.GetRandomFileName().Replace(".", "");
     }
 
-    public void UpdateIdsRecursively(AppDbContext _context, Category category)
+    public void UpdateIdsRecursively(AppDbContext _context, Person person)
     {
-        category.ParentId = null;
-        category.Id = 0;
-        category.UserId = _context.GetLoggedInUserId;
+        person.ParentId = null;
+        person.Id = 0;
+        person.UserId = _context.GetLoggedInUserId;
 
-        if (category.Childs != null)
+        if (person.Childs != null)
         {
-            foreach (var child in category.Childs)
+            foreach (var child in person.Childs)
             {
                 UpdateIdsRecursively(_context, child);
             }
         }
     }
 
-    public void LoadChildsRecursively(AppDbContext _context, Category category)
+    public void LoadChildsRecursively(AppDbContext _context, Person person)
     {
-        _context.Entry(category).Collection(c => c.Childs).Load();
+        _context.Entry(person).Collection(c => c.Childs).Load();
 
-        if (category.Childs != null)
+        if (person.Childs != null)
         {
-            foreach (var child in category.Childs)
+            foreach (var child in person.Childs)
             {
                 LoadChildsRecursively(_context, child);
             }

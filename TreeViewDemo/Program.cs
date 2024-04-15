@@ -48,7 +48,19 @@ catch (Exception)
 
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+// app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = context =>
+    {
+        var path = context.File.PhysicalPath;
+        if (path != null && !path.EndsWith(".js") && !path.EndsWith(".css")) return;
+        context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
+        context.Context.Response.Headers.Add("Pragma", "no-cache");
+        context.Context.Response.Headers.Add("Expires", "0");
+    }
+});
+
 
 app.UseRouting();
 

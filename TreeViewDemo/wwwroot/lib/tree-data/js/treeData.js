@@ -45,8 +45,8 @@ function buildTree(obj, node) {
                         </span>
                         <a style="color:${v.color || 'black'}; background-color:${v.bgColor}" data-bs-toggle="tooltip" title="${v.attrs[0]}&#10;${v.attrs[1]}&#10;${v.attrs[2]}&#10;${v.attrs[3]}&#10;"> 
                             <input name="value" value="${v.value}" class="input-edit hidden" /> 
-                             ${(v.logoUrl != null ? '<img src="' + v.logoUrl + '" class="node-image" alt="-"/>' : '')}
-                            <span class="input-display">${obj[node].value}</span>
+                            <div class="user-photo"><img src="${v.logoUrl || '/images/icons/male.png'}" class="node-image" alt="-"/></div>
+                            <div class="input-display">${obj[node].value}</div>
                             </a>
                             <span class="svg-edit-icon" onclick="showEditModal(this)">
                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -54,8 +54,8 @@ function buildTree(obj, node) {
         } else {
             treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
                         <a style="color:${v.color || 'black'}; background-color:${v.bgColor}" data-bs-toggle="tooltip" title="${v.attrs[0]}&#10;${v.attrs[1]}&#10;${v.attrs[2]}&#10;${v.attrs[3]}&#10;"> 
-                            ${(v.logoUrl != null ? '<img src="' + v.logoUrl + '" class="node-image" alt="-"/>' : '')}
-                            <span class="input-display">${obj[node].value}</span>
+                            <div class="user-photo"><img src="${v.logoUrl || '/images/icons/male.png'}" class="node-image" alt="-"/></div>
+                            <div class="input-display">${obj[node].value}</div>
                         </a>`;
         }
     } else {
@@ -66,17 +66,17 @@ function buildTree(obj, node) {
                         </span>
                         <a style="color:${v.color || 'black'}; background-color:${v.bgColor}"> 
                             <input name="value" value="${v.value}" class="input-edit" /> 
-                            ${(v.logoUrl != null ? '<img src="' + v.logoUrl + '" class="node-image" alt="-"/>' : '')}
+                            <div class="user-photo"><img src="${v.logoUrl || '/images/icons/male.png'}" class="node-image" alt="-"/></div>
                             <span class="input-display">${obj[node].value}</span>
                         </a>
-                        <span class="svg-edit-icon" onclick="showEditModal(this)">
+                        <div class="svg-edit-icon" onclick="showEditModal(this)">
                             <i class="fa-solid fa-pen-to-square"></i>
-                        </span>`;
+                        </div>`;
         } else {
             treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
                         <a style="color:${v.color || 'black'}; background-color:${v.bgColor}"> 
-                            ${(v.logoUrl != null ? '<img src="' + v.logoUrl + '" class="node-image" alt="-"/>' : '')}
-                            <span class="input-display">${obj[node].value}</span>
+                            <div class="user-photo"><img src="${v.logoUrl || '/images/icons/male.png'}" class="node-image" alt="-"/></div>
+                            <div class="input-display">${obj[node].value}</div>
                         </a>`;
         }
     }
@@ -116,7 +116,7 @@ function showEditModal($this) {
     console.log('edit modal');
 }
 
-// $(document).on('submit', '#category-edit-from', function(e){
+// $(document).on('submit', '#person-edit-from', function(e){
 //     e.preventDefault();
 //     let data = new FormData(this);
 //     $.post('/categories/edit', data, function(res){

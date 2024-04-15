@@ -10,9 +10,9 @@ VALUES
 SET IDENTITY_INSERT [dbo].[AppUsers] OFF;
 
 
-SET IDENTITY_INSERT [dbo].[Categories] ON 
--- Insert data into Categories table
-INSERT INTO [dbo].[Categories] ([Id], [Name], [Status], [ParentId], [TextColor], [BgColor], [UserId], [LogoUrl]) 
+SET IDENTITY_INSERT [dbo].[Persons] ON 
+-- Insert data into Persons table
+INSERT INTO [dbo].[Persons] ([Id], [Name], [Status], [ParentId], [TextColor], [BgColor], [UserId], [PhotoUrl]) 
 VALUES 
 (6, N'Software Development', 1, NULL, N'#000000', N'#ffffff', 1, NULL),
 (7, N'App Development', 1, 6, N'#000000', N'#ffffff', 1, NULL),
@@ -40,4 +40,4 @@ VALUES
 (32, N'Desktop Apps', 1, 17, N'#000000', N'#ffffff', 1, NULL),
 (33, N'Web Apps', 1, 17, N'#000000', N'#ffffff', 1, NULL);
 
-SET IDENTITY_INSERT [dbo].[Categories] OFF
+SET IDENTITY_INSERT [dbo].[Persons] OFF

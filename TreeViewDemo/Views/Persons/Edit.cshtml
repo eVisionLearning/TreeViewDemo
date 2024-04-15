@@ -1,7 +1,7 @@
-﻿@model TreeViewDemo.Models.Category
+﻿@model TreeViewDemo.Models.Person
 
 @{
-    ViewData["Title"] = "Edit Category";
+    ViewData["Title"] = "Edit Person";
 }
 
 @if (Model.Partial)
@@ -87,11 +87,11 @@ else
 {
     <h1>Edit</h1>
 
-    <h4>Category</h4>
+    <h4>Person</h4>
     <hr/>
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Edit" id="category-edit-from" enctype="multipart/form-data">
+            <form asp-action="Edit" id="person-edit-from" enctype="multipart/form-data">
                 <input asp-for="ParentId" type="hidden"/>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id"/>

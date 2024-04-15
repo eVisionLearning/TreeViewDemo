@@ -23,12 +23,12 @@ namespace TreeViewDemo.Controllers
 
         public IActionResult Index(bool id = false)
         {
-            if (!_context.Categories.Any() && !id)
+            if (!_context.Persons.Any() && !id)
             {
                 return View();
             }
 
-            if (id && !_context.Categories.Any())
+            if (id && !_context.Persons.Any())
             {
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "DefaultData.sql");
                 int r = _context.Database.ExecuteSqlRaw(System.IO.File.ReadAllText(filePath));
@@ -38,7 +38,7 @@ namespace TreeViewDemo.Controllers
                 }
             }
 
-            return RedirectToAction("Index", "Categories");
+            return RedirectToAction("Index", "Persons");
         }
 
         public IActionResult Privacy()

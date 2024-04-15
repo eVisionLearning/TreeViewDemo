@@ -1,8 +1,8 @@
-﻿@model IEnumerable<TreeViewDemo.Models.Category>
+﻿@model IEnumerable<TreeViewDemo.Models.Person>
 
 @{
     ViewData["Title"] = "Index";
-    Category parent = ViewBag.parent;
+    Person parent = ViewBag.parent;
 }
 
 @if (parent == null)
@@ -15,7 +15,7 @@ else
     <a class="btn btn-sm btn-info text-white" href="/Categories">Goto Top Level Categories</a>
 }
 
-<a class="btn btn-primary btn-sm" asp-action="Create" asp-route-parentId="@(parent?.Id)">Create @(parent == null ? "Top Level Category" : $"Child Category in {parent.Name}")</a>
+<a class="btn btn-primary btn-sm" asp-action="Create" asp-route-parentId="@(parent?.Id)">Create @(parent == null ? "Top Level Person" : $"Child Person in {parent.Name}")</a>
 <table class="table table-striped mt-2 categories-table">
     <thead>
     <tr>
@@ -37,9 +37,9 @@ else
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
 
-                @if (!string.IsNullOrEmpty(item.LogoUrl))
+                @if (!string.IsNullOrEmpty(item.PhotoUrl))
                 {
-                    <img src="@item.LogoUrl" class="img img-thumbnail"/>
+                    <img src="@item.PhotoUrl" class="img img-thumbnail"/>
                 }
             </td>
             <td>
