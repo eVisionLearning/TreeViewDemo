@@ -62,7 +62,8 @@ namespace TreeViewDemo.Controllers
         {
             if (!parentId.HasValue)
             {
-                return View(new Person { GrandParentName = ".Net", ParentName = ".Net Core", Name = "Web App" });
+                //return View(new Person { GrandParentName = ".Net", ParentName = ".Net Core", Name = "Web App" });
+                return View();
             }
 
             var parent = await _context.FilteredPersons().FirstOrDefaultAsync(m => m.Id == parentId);
@@ -79,7 +80,7 @@ namespace TreeViewDemo.Controllers
         public async Task<IActionResult> Create(Person person)
         {
             if (!ModelState.IsValid) return View(person);
-            person.PhotoUrl = person.Logo?.SaveAs("persons").Result;
+            person.PhotoUrl = person.Photo?.SaveAs("persons").Result;
             person.ParentLogoUrl = person.ParentLogo?.SaveAs("persons").Result;
             person.GrandParentLogoUrl = person.GrandParentLogo?.SaveAs("persons").Result;
             person.UserId = _context.GetLoggedInUserId;
@@ -95,11 +96,16 @@ namespace TreeViewDemo.Controllers
                     UserId = person.UserId,
                     Status = true,
                     PhotoUrl = person.GrandParentLogoUrl,
+                    MaritalStatus = MaritalStatus.Married,
+                    Gender = Gender.Male,
                     Childs = new()
                     {
                         new Person()
                         {
                             Name = person.ParentName,
+                            LastName = person.TreeName,
+                            MaritalStatus = MaritalStatus.Married,
+                            Gender = Gender.Male,
                             Childs = new()
                             {
                                 person
@@ -163,44 +169,44 @@ namespace TreeViewDemo.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(person);
+            try
             {
-                try
+                if (!_context.FilteredPersons().Any(m => m.Id == person.Id)) return NotFound();
+                person.PhotoUrl = person.Photo?.SaveAs("persons").Result;
+                _context.Update(person);
+                if (string.IsNullOrEmpty(person.PhotoUrl))
+                    _context.Entry(person).Property(m => m.PhotoUrl).IsModified = false;
+                _context.Entry(person).Property(m => m.ParentId).IsModified = false;
+                _context.Entry(person).Property(m => m.UserId).IsModified = false;
+                _context.Entry(person).Property(m => m.Gender).IsModified = false;
+                _context.Entry(person).Property(m => m.MaritalStatus).IsModified = false;
+                _context.Entry(person).Property(m => m.LastName).IsModified = false;
+
+                // if (!string.IsNullOrEmpty(person.TreeName))
+                // {
+                //     var user = await _context.AppUsers.Where(m => m.Id == _context.GetLoggedInUserId).FirstAsync();
+                //     user.TreeName = person.TreeName;
+                // }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!personExists(person.Id))
                 {
-                    if (!_context.FilteredPersons().Any(m => m.Id == person.Id)) return NotFound();
-                    person.PhotoUrl = person.Logo?.SaveAs("persons").Result;
-                    _context.Update(person);
-                    if (string.IsNullOrEmpty(person.PhotoUrl))
-                        _context.Entry(person).Property(m => m.PhotoUrl).IsModified = false;
-                    _context.Entry(person).Property(m => m.ParentId).IsModified = false;
-                    _context.Entry(person).Property(m => m.UserId).IsModified = false;
-
-                    if (!string.IsNullOrEmpty(person.TreeName))
-                    {
-                        var user = await _context.AppUsers.Where(m => m.Id == _context.GetLoggedInUserId).FirstAsync();
-                        user.TreeName = person.TreeName;
-                    }
-
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!personExists(person.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-
-                return person.Partial
-                    ? RedirectToAction("TreeView")
-                    : RedirectToAction(nameof(Index), new { person.ParentId });
             }
 
-            return View(person);
+            return person.Partial
+                ? RedirectToAction("TreeView")
+                : RedirectToAction(nameof(Index), new { person.ParentId });
+
         }
 
         // GET: persons/Delete/5

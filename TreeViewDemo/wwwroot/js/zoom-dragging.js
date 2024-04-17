@@ -97,7 +97,7 @@ $(document).on('dblclick', '[data-pid] a', function (e){
 });
 
 $(document).on('click', '.reset-position', function (e){
-    $('#tree > ul > li > ul > li > a > span').trigger('dblclick');
+    $('#tree > ul > li > ul > li > a').trigger('dblclick');
 });
 
 $(document).on('click', '.reset-zoom', function (e){

@@ -21,7 +21,7 @@ function buildTree(obj, node) {
     var v = obj[node];
     var treeString = `<li data-id="${v.id}">
                         <a style="color:${v.color || 'black'}; background-color:${v.bgColor}"> 
-                            ${(v.logoUrl != null ? '<img src="' + v.logoUrl + '" class="node-image" alt="-"/>' : '')}
+                            ${(v.photoUrl != null ? '<img src="' + v.photoUrl + '" class="node-image" alt="-"/>' : '')}
                             <span class="input-display">${obj[node].value}</span>
                         </a>`;
     var sons = [];

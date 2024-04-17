@@ -12,8 +12,8 @@ using TreeViewDemo.Data;
 namespace TreeViewDemo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240415160241_Init")]
-    partial class Init
+    [Migration("20240417014440_SPName")]
+    partial class SPName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,13 +100,23 @@ namespace TreeViewDemo.Migrations
                     b.Property<string>("BgColor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaritalStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
                     b.Property<string>("PhotoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SpouseName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")

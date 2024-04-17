@@ -37,10 +37,10 @@ namespace TreeViewDemo.Data
             //);
 
             //modelBuilder.Entity<Person>().HasData(
-            //    new Person { Id = 6, Name = "Software Development", Status = true, TextColor = "#000000", BgColor = "#ffffff", UserId = 1, LogoUrl = "/persons/oeg4mbcrgqj.png" },
+            //    new Person { Id = 6, Name = "Software Development", Status = true, TextColor = "#000000", BgColor = "#ffffff", UserId = 1, PhotoUrl = "/persons/oeg4mbcrgqj.png" },
             //    new Person { Id = 7, Name = "App Development", Status = true, ParentId = 6, TextColor = "#000000", BgColor = "#ffffff", UserId = 1 },
             //    new Person { Id = 8, Name = "Android Apps", Status = true, ParentId = 7, TextColor = "#000000", BgColor = "#ffffff", UserId = 1 },
-            //    new Person { Id = 9, Name = "Web Development", Status = true, ParentId = 6, TextColor = "#000000", BgColor = "#ffffff", UserId = 1, LogoUrl = "/persons/otev5i133bt.jpeg" },
+            //    new Person { Id = 9, Name = "Web Development", Status = true, ParentId = 6, TextColor = "#000000", BgColor = "#ffffff", UserId = 1, PhotoUrl = "/persons/otev5i133bt.jpeg" },
             //    new Person { Id = 10, Name = "Desktop Development", Status = true, ParentId = 6, TextColor = "#000000", BgColor = "#ffffff", UserId = 1 },
             //    new Person { Id = 11, Name = "Cross Platform", Status = true, ParentId = 6, TextColor = "#000000", BgColor = "#ffffff", UserId = 1 },
             //    new Person { Id = 12, Name = "PHP", Status = true, ParentId = 9, TextColor = "#000000", BgColor = "#ffffff", UserId = 1 },

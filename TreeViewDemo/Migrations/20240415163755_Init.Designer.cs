@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TreeViewDemo.Data;
 
@@ -11,9 +12,11 @@ using TreeViewDemo.Data;
 namespace TreeViewDemo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240415163755_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,23 +103,16 @@ namespace TreeViewDemo.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("MaritalStatus")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
                     b.Property<string>("PhotoUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SpouseName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")

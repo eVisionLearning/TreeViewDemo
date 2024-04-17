@@ -15,7 +15,7 @@ function TreeData(data, select) {
         $('.svg-add-icon, .svg-edit-icon').hide();
 
         if (editMode) {
-            $(document).on('click', 'li', function (event) {
+            $(document).on('click', 'li:not([data-id="undefined"])', function (event) {
                 event.stopPropagation(); // Stop propagation to prevent bubbling
                 if ($(this).hasClass('active-i')) return;
                 $('.active-i').removeClass('active-i');
@@ -40,12 +40,14 @@ function buildTree(obj, node) {
     if (v.attrs) {
         if (editMode) {
             treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
-                        <span class="svg-add-icon hidden" onclick="window.location.assign('/Categories/Create?ParentId=${v.id}&partial=true')">
+                        <span class="svg-add-icon hidden" onclick="window.location.assign('/Persons/Create?ParentId=${v.id}&partial=true')">
                             <i class="fa-solid fa-plus"></i>
                         </span>
                         <a style="color:${v.color || 'black'}; background-color:${v.bgColor}" data-bs-toggle="tooltip" title="${v.attrs[0]}&#10;${v.attrs[1]}&#10;${v.attrs[2]}&#10;${v.attrs[3]}&#10;"> 
                             <input name="value" value="${v.value}" class="input-edit hidden" /> 
-                            <div class="user-photo"><img src="${v.logoUrl || '/images/icons/male.png'}" class="node-image" alt="-"/></div>
+                            <div class="user-photo">
+                                <img src="${v.photoUrl || (v.gender == 'Male' ? '/images/icons/male.png' : '/images/icons/female.png')}" class="node-image ${v.maritalStatus.toLowerCase()} ${v.gender.toLowerCase()}" alt="-"/>
+                            </div>
                             <div class="input-display">${obj[node].value}</div>
                             </a>
                             <span class="svg-edit-icon" onclick="showEditModal(this)">
@@ -54,7 +56,9 @@ function buildTree(obj, node) {
         } else {
             treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
                         <a style="color:${v.color || 'black'}; background-color:${v.bgColor}" data-bs-toggle="tooltip" title="${v.attrs[0]}&#10;${v.attrs[1]}&#10;${v.attrs[2]}&#10;${v.attrs[3]}&#10;"> 
-                            <div class="user-photo"><img src="${v.logoUrl || '/images/icons/male.png'}" class="node-image" alt="-"/></div>
+                            <div class="user-photo">
+                                <img src="${v.photoUrl || (v.gender == 'Male' ? '/images/icons/male.png' : '/images/icons/female.png')}" class="node-image ${v.maritalStatus.toLowerCase()} ${v.gender.toLowerCase()}" alt="-"/>    
+                            </div>
                             <div class="input-display">${obj[node].value}</div>
                         </a>`;
         }
@@ -66,7 +70,9 @@ function buildTree(obj, node) {
                         </span>
                         <a style="color:${v.color || 'black'}; background-color:${v.bgColor}"> 
                             <input name="value" value="${v.value}" class="input-edit" /> 
-                            <div class="user-photo"><img src="${v.logoUrl || '/images/icons/male.png'}" class="node-image" alt="-"/></div>
+                            <div class="user-photo">
+                                <img src="${v.photoUrl || (v.gender == 'Male' ? '/images/icons/male.png' : '/images/icons/female.png')}" class="node-image ${v.maritalStatus.toLowerCase()} ${v.gender.toLowerCase()}" alt="-"/>
+                            </div>
                             <span class="input-display">${obj[node].value}</span>
                         </a>
                         <div class="svg-edit-icon" onclick="showEditModal(this)">
@@ -75,7 +81,9 @@ function buildTree(obj, node) {
         } else {
             treeString = `<li data-id="${v.id}" data-pid="${v.parentId}">
                         <a style="color:${v.color || 'black'}; background-color:${v.bgColor}"> 
-                            <div class="user-photo"><img src="${v.logoUrl || '/images/icons/male.png'}" class="node-image" alt="-"/></div>
+                            <div class="user-photo">
+                                <img src="${v.photoUrl || (v.gender == 'Male' ? '/images/icons/male.png' : '/images/icons/female.png')}" class="node-image ${v.maritalStatus.toLowerCase()} ${v.gender.toLowerCase()}" alt="-"/>
+                            </div>
                             <div class="input-display">${obj[node].value}</div>
                         </a>`;
         }
@@ -106,7 +114,7 @@ function showEditModal($this) {
     if (!editMode) return;
     let id = $($this).closest('li').data('id');
     let pid = $($this).closest('li').data('pid');
-    let url = "/Categories/Edit/" + id + '?p=true';
+    let url = "/Persons/Edit/" + id + '?p=true';
     console.log(url);
     $("#edit-modal-body").load(url, function (res) {
         $('[id=Partial]').val('true');
@@ -119,7 +127,7 @@ function showEditModal($this) {
 // $(document).on('submit', '#person-edit-from', function(e){
 //     e.preventDefault();
 //     let data = new FormData(this);
-//     $.post('/categories/edit', data, function(res){
+//     $.post('/persons/edit', data, function(res){
 //         console.log('res');
 //     })
 // });

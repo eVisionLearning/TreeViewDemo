@@ -1,12 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.InteropServices;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TreeViewDemo.Models
 {
     public class Person
     {
         public int Id { get; set; }
+        
+        [Required(ErrorMessage = "Enter person's name.")]
         public string Name { get; set; }
+        public string LastName { get; set; }
+        
+        public string SpouseName { get; set; }
         public bool Status { get; set; }
 
         public string TextColor { get; set; }
@@ -25,8 +30,14 @@ namespace TreeViewDemo.Models
         public virtual AppUser User { get; set; }
 
         public string PhotoUrl { get; set; }
+        
+        [Required(ErrorMessage = "Choose Marital Status")]
+        public MaritalStatus MaritalStatus { get; set; }
+        
+        [Required(ErrorMessage = "Choose Gender")]
+        public Gender Gender { get; set; }
 
-        [NotMapped] public IFormFile Logo { get; set; }
+        [NotMapped] public IFormFile Photo { get; set; }
 
         [NotMapped] public string TreeName { get; set; }
 
@@ -39,5 +50,17 @@ namespace TreeViewDemo.Models
 
         [NotMapped] public string GrandParentLogoUrl { get; set; }
         [NotMapped] public IFormFile GrandParentLogo { get; set; }
+    }
+
+    public enum MaritalStatus
+    {
+        Unmarried = 0,
+        Married = 1
+    }
+
+    public enum Gender
+    {
+        Female = 0,
+        Male = 1
     }
 }

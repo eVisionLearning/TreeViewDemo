@@ -8,113 +8,187 @@
 
 @if (parent == null)
 {
-    <h4>Create Top Level Person</h4>
+    if (_db.FilteredPersons().Any())
+    {
+        <h4>Create Top Level Person</h4>
+    }
+    else
+    {
+        <h4>Create New Tree</h4>
+    }
 }
 else
 {
     <h4>Create Child Person <span class="text-info">(in @parent.Name)</span></h4>
 }
-<hr />
-<div class="loading-v-app">
-    Loading...
-</div>
-<form asp-action="Create" enctype="multipart/form-data">
-    <div class="row" id="v-app" v-cloak>
-        <div class="col-md-4">
-            <input type="hidden" asp-for="ParentId" value="@(parent?.Id)" />
-            @if (parent == null && !_db.FilteredPersons().Any())
-            {
-                <div class="form-group">
-                    <label asp-for="TreeName" class="control-label">Tree Name</label>
-                    <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name" />
-                    <span asp-validation-for="TreeName" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="GrandParentName" class="control-label">Grand Parent Name</label>
-                    <input asp-for="GrandParentName" class="form-control" data-val="true" data-val-required="Enter Tree Grand Parent Name" placeholder="Tree Grand Parent Name" />
-                    <span asp-validation-for="GrandParentName" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="ParentName" class="control-label">Parent Name</label>
-                    <input asp-for="ParentName" class="form-control" data-val="true" data-val-required="Enter Tree Parent Name" placeholder="Tree Parent Name" />
-                    <span asp-validation-for="ParentName" class="text-danger"></span>
-                </div>
-            }
-            @if (ViewBag.partial == true)
-            {
-                <input asp-for="Partial" value="True" type="hidden" />
-            }
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label">Person Name</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label asp-for="TextColor" class="control-label"></label>
-                        <input asp-for="TextColor" class="form-control" value="@(Model?.TextColor ?? "#000000")" type="color" />
-                        <span asp-validation-for="TextColor" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label asp-for="BgColor" class="control-label"></label>
-                        <input asp-for="BgColor" class="form-control" value="@(Model?.BgColor ?? "#ffffff")" type="color" />
-                        <span asp-validation-for="BgColor" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Logo" class="control-label"></label>
-                <input asp-for="Logo" class="form-control" type="file" />
-                <span asp-validation-for="Logo" class="text-danger"></span>
-            </div>
-
-            <br />
-            <h3>Attributes</h3>
-            <div class="form-group">
-                <label asp-for="Attribute1" class="control-label"></label>
-                <input asp-for="Attribute1" class="form-control" />
-                <span asp-validation-for="Attribute1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attribute2" class="control-label"></label>
-                <input asp-for="Attribute2" class="form-control" />
-                <span asp-validation-for="Attribute2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attribute3" class="control-label"></label>
-                <input asp-for="Attribute3" class="form-control" />
-                <span asp-validation-for="Attribute3" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attribute4" class="control-label"></label>
-                <input asp-for="Attribute4" class="form-control" />
-                <span asp-validation-for="Attribute4" class="text-danger"></span>
-            </div>
-
-
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Status" value="True" /> @Html.DisplayNameFor(model => model.Status)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="multiple-tree-area overflow-auto"></div>
-        </div>
+<hr/>
+<div id="v-app">
+    <div class="loading-v-app" v-if="false">
+        <i class="fa fa-spin fa-spinner"></i>
     </div>
-</form>
+    <form asp-action="Create" enctype="multipart/form-data" v-cloak>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row" v-cloak>
+            <div class="col-md-4">
+                <input type="hidden" asp-for="ParentId" value="@(parent?.Id)"/>
+                <div class="form-group mb-3">
+                    <label asp-for="Gender">Choose Gender</label>
+                    <br/>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" asp-for="Gender" type="radio" id="male" v-model="gender" value="Male">
+                        <label class="form-check-label" for="male"> Male</label>
+                    </div>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" asp-for="Gender" type="radio" id="female" v-model="gender" value="Female">
+                        <label class="form-check-label" for="female"> Female</label>
+                    </div>
+                    <br/>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
 
+                <div class="form-group mb-3">
+                    <label asp-for="Gender">Choose Marital Status</label>
+                    <br/>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="married" v-model="maritalStatus" value="Married">
+                        <label class="form-check-label" for="married"> Married</label>
+                    </div>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="unmarried" v-model="maritalStatus" value="Unmarried">
+                        <label class="form-check-label" for="unmarried"> Unmarried</label>
+                    </div>
+                    <br/>
+                    <span asp-validation-for="MaritalStatus" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Your Name</label>
+                    <input asp-for="Name" class="form-control"/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group" v-if="isMarriedMale()">
+                    <label asp-for="SpouseName" class="control-label">Your Spouse Name</label>
+                    <input asp-for="SpouseName" class="form-control"/>
+                    <span asp-validation-for="SpouseName" class="text-danger"></span>
+                </div>
+
+                @if (parent == null && !_db.FilteredPersons().Any())
+                {
+                    <template v-if="isMarriedFemale()">
+                        <div class="form-group">
+                            <label asp-for="TreeName" class="control-label">Your Last Name</label>
+                            <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Last Name Required" placeholder="Last Name"/>
+                            <span asp-validation-for="TreeName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ParentName" class="control-label">Your Husband's Parent Name</label>
+                            <input asp-for="ParentName" class="form-control" data-val="true" data-val-required="Enter Husband's Parent Name" placeholder="Husband's Parent Name"/>
+                            <span asp-validation-for="ParentName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="GrandParentName" class="control-label">Your Husband's Grand Parent Name</label>
+                            <input asp-for="GrandParentName" class="form-control" data-val="true" data-val-required="Enter Husband's Grand Parent Name" placeholder="Husband's Grand Parent Name"/>
+                            <span asp-validation-for="GrandParentName" class="text-danger"></span>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="form-group">
+                            <label asp-for="TreeName" class="control-label">Tree Name</label>
+                            <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Tree Name Required" placeholder="Tree Name"/>
+                            <span asp-validation-for="TreeName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ParentName" class="control-label">Your Parent Name</label>
+                            <input asp-for="ParentName" class="form-control" data-val="true" data-val-required="Enter Parent Name" placeholder="Parent Name"/>
+                            <span asp-validation-for="ParentName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="GrandParentName" class="control-label">Your Grand Parent Name</label>
+                            <input asp-for="GrandParentName" class="form-control" data-val="true" data-val-required="Enter Grand Parent Name" placeholder="Grand Parent Name"/>
+                            <span asp-validation-for="GrandParentName" class="text-danger"></span>
+                        </div>
+                    </template>
+                }
+                else
+                {
+                    <div class="form-group" v-if="isMarriedFemale()">
+                        <label asp-for="TreeName" class="control-label">Your Last Name</label>
+                        <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Last Name Required" placeholder="Last Name"/>
+                        <span asp-validation-for="TreeName" class="text-danger"></span>
+                    </div>
+                }
+                @if (ViewBag.partial == true)
+                {
+                    <input asp-for="Partial" value="True" type="hidden"/>
+                }
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TextColor" class="control-label"></label>
+                            <input asp-for="TextColor" class="form-control" value="@(Model?.TextColor ?? "#000000")" type="color"/>
+                            <span asp-validation-for="TextColor" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="BgColor" class="control-label"></label>
+                            <input asp-for="BgColor" class="form-control" value="@(Model?.BgColor ?? "#ffffff")" type="color"/>
+                            <span asp-validation-for="BgColor" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Photo" class="control-label"></label>
+                    <input asp-for="Photo" class="form-control" type="file"/>
+                    <span asp-validation-for="Photo" class="text-danger"></span>
+                </div>
+
+                <br/>
+                <h3>Attributes</h3>
+                <div class="form-group">
+                    <label asp-for="Attribute1" class="control-label"></label>
+                    <input asp-for="Attribute1" class="form-control"/>
+                    <span asp-validation-for="Attribute1" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Attribute2" class="control-label"></label>
+                    <input asp-for="Attribute2" class="form-control"/>
+                    <span asp-validation-for="Attribute2" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Attribute3" class="control-label"></label>
+                    <input asp-for="Attribute3" class="form-control"/>
+                    <span asp-validation-for="Attribute3" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Attribute4" class="control-label"></label>
+                    <input asp-for="Attribute4" class="form-control"/>
+                    <span asp-validation-for="Attribute4" class="text-danger"></span>
+                </div>
+
+
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="Status" value="True"/> @Html.DisplayNameFor(model => model.Status)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary"/>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="multiple-tree-area overflow-auto"></div>
+            </div>
+        </div>
+    </form>
+</div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
@@ -125,21 +199,22 @@ else
         <script src="/lib/vue/vue.global.prod.min.js"></script>
         <script src="~/lib/tree-data/js/treeData-default.js?v=@DateTime.UtcNow.Ticks"></script>
         <script>
-            $('#Status').click();
             $(".multiple-tree-area").hide();
             const app = Vue.createApp({
                 data() {
                     return {
-                        matchedTrees: []
+                        matchedTrees: [],
+                        gender:'',
+                        maritalStatus: ''
                     };
                 },
                 created() {
                     $(".loading-v-app").hide();
-
-                    $(document).on('change', '#Name, #ParentName, #GrandParentName', function () {
-                        var name = $('#Name').val();
-                        var parentName = $('#ParentName').val();
-                        var grandParentName = $('#GrandParentName').val();
+                    $('#Status').click();
+                    $(document).on('change', '#Name, #ParentName, #GrandParentName', () => {
+                        const name = $('#Name').val();
+                        const parentName = $('#ParentName').val();
+                        const grandParentName = $('#GrandParentName').val();
 
                         if (name && parentName && grandParentName) {
                             $.post('/Services/MatchedTrees', { name, parentName, grandParentName }, function (res) {
@@ -165,13 +240,21 @@ else
                             });
                         }
                     });
+                },
+                methods:{
+                    isMarriedFemale(){
+                        return this.gender == '@Gender.Female.ToString()' && this.maritalStatus == '@MaritalStatus.Married.ToString()';
+                    },
+                    isMarriedMale(){
+                        return this.gender == '@Gender.Male.ToString()' && this.maritalStatus == '@MaritalStatus.Married.ToString()';
+                    }
                 }
             }).mount('#v-app');
 
             $(document).on('click', '.btn-merge-tree', function () {
                 let id = $(this).data('id');
                 if (confirm('Are you sure you want to merge this tree?')) {
-                    window.location.assign('/Categories/Merge/' + id);
+                    window.location.assign('/Persons/Merge/' + id);
                 }
             });
         </script>
@@ -179,8 +262,8 @@ else
 }
 
 @section css {
-    <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet" />
-    <link href="~/lib/tree-data/css/sintax.css?v=@Globals.StaticAssetsVersion" rel="stylesheet" />
+    <link href="~/lib/tree-data/css/treedata.min.css" rel="stylesheet"/>
+    <link href="~/lib/tree-data/css/sintax.css?v=@Globals.StaticAssetsVersion" rel="stylesheet"/>
     <style>
         .tree-merging {
             width: 500% !important;

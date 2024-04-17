@@ -7,16 +7,16 @@
 
 @if (parent == null)
 {
-    <h1>List of Top Level Categories</h1>
+    <h1>List of Top Level Persons</h1>
 }
 else
 {
-    <h1>List of Child Categories in <small class="text-primary">@parent.Name</small> </h1>
-    <a class="btn btn-sm btn-info text-white" href="/Categories">Goto Top Level Categories</a>
+    <h1>List of Child Persons in <small class="text-primary">@parent.Name</small> </h1>
+    <a class="btn btn-sm btn-info text-white" href="/Persons">Goto Top Level Persons</a>
 }
 
 <a class="btn btn-primary btn-sm" asp-action="Create" asp-route-parentId="@(parent?.Id)">Create @(parent == null ? "Top Level Person" : $"Child Person in {parent.Name}")</a>
-<table class="table table-striped mt-2 categories-table">
+<table class="table table-striped mt-2 persons-table">
     <thead>
     <tr>
         <th>
@@ -54,7 +54,7 @@ else
             </td>
             <td>@(item.Parent?.Name ?? "Top Level")</td>
             <td class="text-center">
-                <a href="/Categories?ParentId=@item.Id">@item.Childs.Count</a>
+                <a href="/Persons?ParentId=@item.Id">@item.Childs.Count</a>
             </td>
             <td class="fa-1-25">
                 <a asp-action="Edit" asp-route-id="@item.Id" title="Edit">
@@ -90,14 +90,14 @@ else
         .fa-1-25{
         font-size: 1.25em;;
         }
-       .categories-table td img {
+       .persons-table td img {
        max-height: 30px;
        padding: 1px;
        float: right;
        transition: all 0.5s;
        }
        
-       .categories-table td img:hover {
+       .persons-table td img:hover {
               transform: scale(5,5);
               }
     </style>

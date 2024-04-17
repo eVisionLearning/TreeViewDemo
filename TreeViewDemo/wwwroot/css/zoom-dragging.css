@@ -7,28 +7,30 @@
     width: 500vw;
     margin-left: -230vw;
 }
+
 #tree-map.dragging {
     cursor: grabbing;
 }
+
 body {
     overflow: hidden;
 }
 
 .tree > li:nth-child(0) > a:nth-child(0) {
-    visibility:hidden;
+    visibility: hidden;
 }
 
-#tree ul:first-child > li:first-child > a:first-child{
+#tree ul:first-child > li:first-child > a:first-child {
     /*visibility: hidden;*/
     background: red;
 }
 
-ul.tree{
+ul.tree {
     /*width: 5000%;*/
-    margin:auto;
+    margin: auto;
 }
 
-body{
+body {
     width: 50000%;
 }
 
@@ -36,26 +38,26 @@ body{
     margin: 0 5px;
 }
 
-.form-control[type=color]{
-    width:30px !important;
-    height:30px !important;
-    padding:2px !important;
+.form-control[type=color] {
+    width: 30px !important;
+    height: 30px !important;
+    padding: 2px !important;
 }
 
-.opacity0{
+.opacity0 {
     opacity: 0 !important;
 }
 
-.opacity1{
+.opacity1 {
     opacity: 1 !important;
 }
 
-.svg-add-icon, .svg-edit-icon{
+.svg-add-icon, .svg-edit-icon {
     cursor: pointer !important;
 }
 
-body{
-    padding:15px !important;
+body {
+    padding: 15px !important;
 }
 
 #map-search-area {
@@ -73,11 +75,11 @@ body{
     right: 0;
     top: 0;
     height: 60px;
-    z-index: 999999999;
+    z-index: 999;
     border-bottom: 3px groove #eaeaea;
 }
 
-#map-search-area .search-form{
+#map-search-area .search-form {
     float: right;
     white-space: nowrap;
     width: 95vw;
@@ -102,9 +104,10 @@ body{
 }
 
 .node-image:hover {
-    transform:scale(4);
+    transform: scale(4);
     border: 0.25px solid silver;
 }
+
 .tree li a {
     padding: 5px !important;
 }
@@ -114,17 +117,57 @@ body{
 /*    padding: 5px 10px !important;*/
 /*}*/
 
-.input-display{
+.input-display {
     border: 1px solid silver;
     border-radius: 0 0 5px 5px;
     padding: 0 5px;
     min-width: 70px;
 }
 
-.tree li a{
-    border:none !important;
+.tree li a {
+    border: none !important;
 }
 
-.tree li::after, .tree li::before{
+.tree li::after, .tree li::before {
     height: 26px !important;
+}
+
+.male {
+    border-right: 2px solid blue !important;
+}
+
+.female {
+    border-right: 2px solid hotpink !important;
+}
+
+.married {
+    border-left: 2px solid green !important;
+}
+
+.unmarried {
+    border-left: 2px solid orange !important;
+}
+
+/*.modal {*/
+/*    z-index: 9999999999 !important;*/
+/*}*/
+
+/*.modal-backdrop {*/
+/*    z-index: 999999999 !important;*/
+/*}*/
+
+.t-male {
+    background: blue !important;
+}
+
+.t-female {
+    background: hotpink !important;
+}
+
+.t-married {
+    background: green !important;
+}
+
+.t-unmarried {
+    background: orange !important;
 }

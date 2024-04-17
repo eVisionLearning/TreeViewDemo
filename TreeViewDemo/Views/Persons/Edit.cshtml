@@ -12,17 +12,46 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id"/>
 
-        @if (!Model.ParentId.HasValue)
-        {
-            <div class="form-group">
-                <label asp-for="TreeName" class="control-label">Tree Name</label>
-                <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name"/>
-                <span asp-validation-for="TreeName" class="text-danger"></span>
-            </div>
-        }
+        @* <div class="form-group mb-3"> *@
+        @*     <label asp-for="Gender">Choose Gender</label> *@
+        @*     <br/> *@
+        @*     <div class="form-check-inline"> *@
+        @*         <input class="form-check-input" asp-for="Gender" type="radio" id="male" v-model="gender" value="Male"> *@
+        @*         <label class="form-check-label" for="male">Male</label> *@
+        @*     </div> *@
+        @*     <div class="form-check-inline"> *@
+        @*         <input class="form-check-input" asp-for="Gender" type="radio" id="female" v-model="gender" value="Female"> *@
+        @*         <label class="form-check-label" for="female">Female</label> *@
+        @*     </div> *@
+        @*     <br/> *@
+        @*     <span asp-validation-for="Gender" class="text-danger"></span> *@
+        @* </div> *@
+        @* *@
+        @* <div class="form-group mb-3"> *@
+        @*     <label asp-for="Gender">Choose Marital Status</label> *@
+        @*     <br/> *@
+        @*     <div class="form-check-inline"> *@
+        @*         <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="married" v-model="maritalStatus" value="Married"> *@
+        @*         <label class="form-check-label" for="married">Married</label> *@
+        @*     </div> *@
+        @*     <div class="form-check-inline"> *@
+        @*         <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="unmarried" v-model="maritalStatus" value="Unmarried"> *@
+        @*         <label class="form-check-label" for="unmarried">Unmarried</label> *@
+        @*     </div> *@
+        @*     <br/> *@
+        @*     <span asp-validation-for="MaritalStatus" class="text-danger"></span> *@
+        @* </div> *@
+        @* @if (!Model.ParentId.HasValue) *@
+        @* { *@
+        @*     <div class="form-group"> *@
+        @*         <label asp-for="TreeName" class="control-label">Tree Name</label> *@
+        @*         <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name"/> *@
+        @*         <span asp-validation-for="TreeName" class="text-danger"></span> *@
+        @*     </div> *@
+        @* } *@
 
         <div class="form-group">
-            <label asp-for="Name" class="control-label"></label>
+            <label asp-for="Name" class="control-label">Your Name</label>
             <input asp-for="Name" class="form-control"/>
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
@@ -45,9 +74,9 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="Logo" class="control-label"></label>
-            <input asp-for="Logo" class="form-control" type="file"/>
-            <span asp-validation-for="Logo" class="text-danger"></span>
+            <label asp-for="Photo" class="control-label"></label>
+            <input asp-for="Photo" class="form-control" type="file"/>
+            <span asp-validation-for="Photo" class="text-danger"></span>
         </div>
 
         <hr/>
@@ -95,16 +124,47 @@ else
                 <input asp-for="ParentId" type="hidden"/>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id"/>
-                @if (!Model.ParentId.HasValue)
-                {
-                    <div class="form-group">
-                        <label asp-for="TreeName" class="control-label">Tree Name</label>
-                        <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name"/>
-                        <span asp-validation-for="TreeName" class="text-danger"></span>
-                    </div>
-                }
+
+                @* <div class="form-group mb-3"> *@
+                @*     <label asp-for="Gender">Choose Gender</label> *@
+                @*     <br/> *@
+                @*     <div class="form-check-inline"> *@
+                @*         <input class="form-check-input" asp-for="Gender" type="radio" id="male" v-model="gender" value="Male"> *@
+                @*         <label class="form-check-label" for="male">Male</label> *@
+                @*     </div> *@
+                @*     <div class="form-check-inline"> *@
+                @*         <input class="form-check-input" asp-for="Gender" type="radio" id="female" v-model="gender" value="Female"> *@
+                @*         <label class="form-check-label" for="female">Female</label> *@
+                @*     </div> *@
+                @*     <br/> *@
+                @*     <span asp-validation-for="Gender" class="text-danger"></span> *@
+                @* </div> *@
+                @* *@
+                @* <div class="form-group mb-3"> *@
+                @*     <label asp-for="Gender">Choose Marital Status</label> *@
+                @*     <br/> *@
+                @*     <div class="form-check-inline"> *@
+                @*         <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="married" v-model="maritalStatus" value="Married"> *@
+                @*         <label class="form-check-label" for="married">Married</label> *@
+                @*     </div> *@
+                @*     <div class="form-check-inline"> *@
+                @*         <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="unmarried" v-model="maritalStatus" value="Unmarried"> *@
+                @*         <label class="form-check-label" for="unmarried">Unmarried</label> *@
+                @*     </div> *@
+                @*     <br/> *@
+                @*     <span asp-validation-for="MaritalStatus" class="text-danger"></span> *@
+                @* </div> *@
+                @* @if (!Model.ParentId.HasValue) *@
+                @* { *@
+                @*     <div class="form-group"> *@
+                @*         <label asp-for="TreeName" class="control-label">Tree Name</label> *@
+                @*         <input asp-for="TreeName" class="form-control" data-val="true" data-val-required="Enter Tree Name" placeholder="Tree Name"/> *@
+                @*         <span asp-validation-for="TreeName" class="text-danger"></span> *@
+                @*     </div> *@
+                @* } *@
+
                 <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
+                    <label asp-for="Name" class="control-label">Person Name</label>
                     <input asp-for="Name" class="form-control"/>
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
@@ -127,9 +187,9 @@ else
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="Logo" class="control-label"></label>
-                    <input asp-for="Logo" class="form-control" type="file"/>
-                    <span asp-validation-for="Logo" class="text-danger"></span>
+                    <label asp-for="Photo" class="control-label"></label>
+                    <input asp-for="Photo" class="form-control" type="file"/>
+                    <span asp-validation-for="Photo" class="text-danger"></span>
                 </div>
 
                 <br/>

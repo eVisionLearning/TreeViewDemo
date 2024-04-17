@@ -48,7 +48,7 @@ namespace TreeViewDemo
                 // If the entity is not already being tracked, mark it as Added
                 if (db.Entry(child).State == EntityState.Detached)
                 {
-                    db.Persons.Add(child); // Assuming Categories is your DbSet<Person>
+                    db.Persons.Add(child); // Assuming Persons is your DbSet<Person>
                 }
             }
 
@@ -93,7 +93,9 @@ namespace TreeViewDemo
                     {
                         { "value", "root" },
                         { "parent", null },
-                        { "logoUrl", null }
+                        { "logoUrl", null },
+                        { "maritalStatus", "Unmarried"},
+                        {"gender", "male"}
                     }
                 }
             };
@@ -109,6 +111,8 @@ namespace TreeViewDemo
                     { "parentId", person.ParentId },
                     { "color", person.TextColor },
                     { "bgColor", person.BgColor },
+                    { "gender", person.Gender.ToString() },
+                    { "maritalStatus", person.MaritalStatus.ToString() },
                     {
                         "attrs",
                         new string[]

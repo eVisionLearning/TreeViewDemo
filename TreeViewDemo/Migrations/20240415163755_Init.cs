@@ -63,7 +63,9 @@ namespace TreeViewDemo.Migrations
                     Attribute4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ParentId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MaritalStatus = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
