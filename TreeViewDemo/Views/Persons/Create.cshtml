@@ -26,7 +26,7 @@ else
     <div class="loading-v-app" v-if="false">
         <i class="fa fa-spin fa-spinner"></i>
     </div>
-    <form asp-action="Create" enctype="multipart/form-data" v-cloak>
+    <form asp-action="Create" asp-route-parentId="@(parent?.Id)" enctype="multipart/form-data" v-cloak>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row" v-cloak>
             <div class="col-md-4">
@@ -35,11 +35,11 @@ else
                     <label asp-for="Gender">Choose Gender</label>
                     <br/>
                     <div class="form-check-inline">
-                        <input class="form-check-input" asp-for="Gender" type="radio" id="male" v-model="gender" value="Male">
+                        <input class="form-check-input" asp-for="Gender" type="radio" id="male" v-model="gender" value="Male" v-on:click="revalidate()">
                         <label class="form-check-label" for="male"> Male</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="form-check-input" asp-for="Gender" type="radio" id="female" v-model="gender" value="Female">
+                        <input class="form-check-input" asp-for="Gender" type="radio" id="female" v-model="gender" value="Female" v-on:click="revalidate()">
                         <label class="form-check-label" for="female"> Female</label>
                     </div>
                     <br/>
@@ -50,11 +50,11 @@ else
                     <label asp-for="Gender">Choose Marital Status</label>
                     <br/>
                     <div class="form-check-inline">
-                        <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="married" v-model="maritalStatus" value="Married">
+                        <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="married" v-model="maritalStatus" value="Married" v-on:click="revalidate()">
                         <label class="form-check-label" for="married"> Married</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="unmarried" v-model="maritalStatus" value="Unmarried">
+                        <input class="form-check-input" asp-for="MaritalStatus" type="radio" id="unmarried" v-model="maritalStatus" value="Unmarried" v-on:click="revalidate()">
                         <label class="form-check-label" for="unmarried"> Unmarried</label>
                     </div>
                     <br/>
@@ -173,7 +173,6 @@ else
                     <span asp-validation-for="Attribute4" class="text-danger"></span>
                 </div>
 
-
                 <div class="form-group form-check">
                     <label class="form-check-label">
                         <input class="form-check-input" asp-for="Status" value="True"/> @Html.DisplayNameFor(model => model.Status)
@@ -204,8 +203,8 @@ else
                 data() {
                     return {
                         matchedTrees: [],
-                        gender:'',
-                        maritalStatus: ''
+                        gender:'@(Model?.Gender.ToString())',
+                        maritalStatus: '@(Model?.MaritalStatus.ToString())'
                     };
                 },
                 created() {
@@ -247,6 +246,10 @@ else
                     },
                     isMarriedMale(){
                         return this.gender == '@Gender.Male.ToString()' && this.maritalStatus == '@MaritalStatus.Married.ToString()';
+                    },
+                    revalidate(){
+                        $('form').data('validator', null);
+                        $.validator.unobtrusive.parse($('form'));
                     }
                 }
             }).mount('#v-app');

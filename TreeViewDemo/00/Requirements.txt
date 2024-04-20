@@ -20,8 +20,26 @@ Date: March 15, 2024
 2. When a user creates a node, if the parent and grandparent match with nodes in other trees (at any level), show those all trees.
 3. Provide an "Append" button with each matched tree but only one tree can be appended with current tree.
 
-@Date 71 Mar 2024 07:15 PM
+@Date 17 Mar 2024 07:15 PM
 Date: March 17, 2024
 xx2. Or add Dynamic Text boxes for search
 --1. Include node parent (one level above) for search text boxes
 --2. Clicked nodes should be auto centered in the display area/screen
+
+@Date 04 Apr 2024 12:46 AM
+First Name and Last Name (For Married Female *Mandatory)
+Tree Name should be Last Name
+Rename all terms from Category, Parent, Grand Parent to Father First Name, Last Name, Self First Name, Last Name, Child First Name, Last Name with multiple child option. (Last name for only married female)
+User can add/edit self details only
+User can add photo for any member in his/her tree
+
+Option of Gender (Male, Female) with each Node
+Option of Married/Not married flag
+Ask for spouse for Married Male (Mandatory)
+For Married Woman Last name *Mandatory
+
+For married female, Tree name will be
+a. her last name
+b. her husband name
+c. her husband's father name
+d. her husband's grand father name

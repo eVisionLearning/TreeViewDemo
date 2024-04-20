@@ -79,7 +79,25 @@ namespace TreeViewDemo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Person person)
         {
-            if (!ModelState.IsValid) return View(person);
+            if (person.MaritalStatus == MaritalStatus.Married)
+            {
+                switch (person.Gender)
+                {
+                    case Gender.Female when string.IsNullOrEmpty(person.TreeName):
+                        ModelState.AddModelError("TreeName", "Last Name is required");
+                        break;
+                    case Gender.Male when string.IsNullOrEmpty(person.SpouseName):
+                        ModelState.AddModelError("SpouseName", "Spouse Name is required");
+                        break;
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var parent = await _context.FilteredPersons().FirstOrDefaultAsync(m => m.Id == person.ParentId);
+                ViewBag.parent = parent;
+                return View(person);
+            }
             person.PhotoUrl = person.Photo?.SaveAs("persons").Result;
             person.ParentLogoUrl = person.ParentLogo?.SaveAs("persons").Result;
             person.GrandParentLogoUrl = person.GrandParentLogo?.SaveAs("persons").Result;
@@ -206,7 +224,6 @@ namespace TreeViewDemo.Controllers
             return person.Partial
                 ? RedirectToAction("TreeView")
                 : RedirectToAction(nameof(Index), new { person.ParentId });
-
         }
 
         // GET: persons/Delete/5
@@ -243,7 +260,8 @@ namespace TreeViewDemo.Controllers
         }
 
         [AccessAnonymous]
-        public async Task<IActionResult> TreeView(string keyword, string firstParentName, string secondParentName, string thirdParentName)
+        public async Task<IActionResult> TreeView(string keyword, string firstParentName, string secondParentName,
+            string thirdParentName)
         {
             ViewBag.keyword = keyword;
             ViewBag.firstParentName = firstParentName;
@@ -293,7 +311,8 @@ namespace TreeViewDemo.Controllers
                     return View(new List<Person>());
             }
 
-            var treeParents = new List<Person> { thirdParent?.Parent ?? secondParent?.Parent ?? firstParent?.Parent }.Where(m => m != null).ToList();
+            var treeParents = new List<Person> { thirdParent?.Parent ?? secondParent?.Parent ?? firstParent?.Parent }
+                .Where(m => m != null).ToList();
             if (!treeParents.Any()) treeParents = await query.Where(m => !m.ParentId.HasValue).ToListAsync();
 
             var data = treeParents.SelectMany(_context.LoadChildsRecursively).ToList();
@@ -319,12 +338,12 @@ namespace TreeViewDemo.Controllers
             {
                 return null;
             }
-            
+
             CoreHandler.GetInstance().LoadChildsRecursively(_context, person);
             //LoadChildsRecursively(person);
             //UpdateIdsRecursively(person);
             CoreHandler.GetInstance().UpdateIdsRecursively(_context, person);
-            
+
             _context.GetLoggedInUser.TreeName = $"Merged - ${person.Name}";
 
             _context.Add(person);
